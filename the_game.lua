@@ -22,6 +22,7 @@ function make()
       game.init_component('c')
       game.init_component('resources')
       game.init_component('blueprints')
+      game.init_component('debug')
 
       game.init_component('action')
       game.init_component('voting')
