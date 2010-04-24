@@ -1,8 +1,8 @@
 rules = {}
 
-local functions = {}
+local qualifier_functions = {}
 
-functions.most = function(players, type)
+qualifier_functions.most = function(players, type)
     local most_count = -math.huge
     local most_player
     for _, player in ipairs(players) do
@@ -14,7 +14,7 @@ functions.most = function(players, type)
     return { most_player }
   end
   
-functions.least = function(players, type)
+qualifier_functions.least = function(players, type)
     local least_count = math.huge
     local least_player
     for _, player in ipairs(players) do
@@ -26,19 +26,19 @@ functions.least = function(players, type)
     return { least_player }
   end
   
-functions.each = function(players, type)
+qualifier_functions.each = function(players, type)
   return players
 end
   
-functions.add = function(targets, type)
+qualifier_functions.add = function(targets, type, quantity)
     for _, target in ipairs(targets) do
-      target.character.attributes[type] = target.character.attributes[type] + 1
+      target.character.attributes[type] = target.character.attributes[type] + quantity
     end
   end
   
-functions.remove = function(targets, type)
+qualifier_functions.remove = function(targets, type, quantity)
     for _, target in ipairs(targets) do
-      target.character.attributes[type] = target.character.attributes[type] - 1
+      target.character.attributes[type] = target.character.attributes[type] - quantity
     end
   end
 
@@ -53,8 +53,17 @@ end
 
 function register_event(player, type)
   for _, rule in ipairs(rules) do
-    if rule.condition_qualifier == "each" and rule.condition_type == type then
+    if game.c.event_qualifiers[rule.condition_qualifier] and rule.condition_type == type then
       fire_rule({player}, rule)
+    end
+  end
+end
+
+function end_round()
+  local players = game.actors.get("character")
+  for _, rule in ipairs(rules) do
+    if game.c.round_qualifiers[rule.condition_qualifier] then
+      fire_rule(players, rule)
     end
   end
 end
@@ -63,6 +72,7 @@ function fire_rule(players, rule)
   print('rule fired: '
         .. rule.condition_qualifier .. ' ' .. rule.condition_type .. ' ' 
         .. rule.consequence_qualifier .. ' ' .. rule.consequence_type)
-  local targets = functions[rule.condition_qualifier](players, rule.condition_type)
-  functions[rule.consequence_qualifier](targets, rule.consequence_type)
+  local targets = qualifier_functions[rule.condition_qualifier](players, rule.condition_type)
+  qualifier_functions[rule.consequence_qualifier](targets,
+    rule.consequence_type, game.c.consequence_quantities[rule.condition_qualifier])
 end

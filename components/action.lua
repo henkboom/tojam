@@ -34,6 +34,7 @@ game.actors.new_generic('action_component', function ()
       if time == game.c.action_duration then
         print('pausing action')
         pause_all()
+        game.rules.end_round()
         game.voting.start()
       end
     end

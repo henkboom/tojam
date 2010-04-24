@@ -37,3 +37,7 @@ consequence_qualifiers = {"add", "remove"}
 consequence_types = {"teacup", "damage", "point", "speed"}
 types_plural = {step = "steps", teacup = "teacups", damage = "damage",
                 point = "points", speed = "speed"}
+consequence_quantities = {most = 10, least = 10, each = 1}
+
+round_qualifiers = {most = true, least = true}
+event_qualifiers = {each = true}
