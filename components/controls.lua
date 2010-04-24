@@ -21,15 +21,15 @@ function action_pressed(player)
   return game.keyboard.key_pressed(game.c.keys[player].action)
 end
 
-function action_down(player)
-  return game.keyboard.key_down(game.c.keys[player].action)
+function action_held(player)
+  return game.keyboard.key_held(game.c.keys[player].action)
 end
 
 function jump_pressed(player)
   return game.keyboard.key_pressed(game.c.keys[player].jump)
 end
 
-function jump_down(player)
-  return game.keyboard.key_down(game.c.keys[player].jump)
+function jump_held(player)
+  return game.keyboard.key_held(game.c.keys[player].jump)
 end
 

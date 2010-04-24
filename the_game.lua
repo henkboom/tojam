@@ -19,19 +19,27 @@ function make()
       game.opengl_2d.width = 800
       game.opengl_2d.height = 600
 
+      -- information components
       game.init_component('c')
       game.init_component('resources')
       game.init_component('blueprints')
       game.init_component('debug')
 
+      -- general components
+      game.init_component('collision')
       game.init_component('controls')
 
+      -- game logic components
 			game.init_component('rules')
       game.init_component('action')
       game.init_component('voting')
 
       game.actors.new(game.blueprints.character,
-        {'transform', pos=v2(100, 100)})
+        {'transform', pos=v2(100, 100)},
+        {'character', player=1})
+      game.actors.new(game.blueprints.character,
+        {'transform', pos=v2(200, 120)},
+        {'character', player=2})
 
       game.action.resume()
     end)
