@@ -5,12 +5,13 @@ local health = 10
 local target = nil
 local speed = 1
 local attack_cooldown = 0
+local death_timer = 30
 
 function update()
   attack_cooldown = math.max(0, attack_cooldown - 1)
 
   if health < 1 then
-    self.dead = true
+    die()
     return
   end
 
@@ -30,6 +31,17 @@ function update()
         {'attack_hitbox', source=self, offset=offset})
       attack_cooldown = 40
     end
+  end
+end
+
+function die()
+  death_timer = death_timer - 1
+  if death_timer < 0 then
+    self.dead = true
+  else
+    self.billboard.image = game.resources.sprites.enemy_death
+    self.billboard.color[4] = self.billboard.color[4] or 1
+    self.billboard.color[4] = self.billboard.color[4] - 0.01
   end
 end
 

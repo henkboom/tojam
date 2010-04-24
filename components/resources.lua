@@ -3,7 +3,8 @@ local mixer = require 'mixer'
 
 sprites = {
   character = graphics.sprite_from_image('sprites/character.png', nil, 'center'),
-  enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center')
+  enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
+  enemy_death = graphics.sprite_from_image('sprites/monster_death.png', nil, 'center')
 }
 
 sfx = {
