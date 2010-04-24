@@ -3,17 +3,17 @@ local v2 = require 'dokidoki.v2'
 
 local geom = require 'geom'
 
-character = game.make_blueprint('character',
-  {'transform', height=0},
-  {'billboard', image = game.resources.sprites.character},
-  {'tag', tags={'action'}},
+player = game.make_blueprint('player',
+  {'transform', height=8},
+  {'billboard', image = game.resources.sprites.player},
+  {'tag', tags={'action', 'collides_with_level'}},
   {'collider', poly=geom.make_octagon(8)},
-  {'character'})
+  {'player'})
 
 enemy = game.make_blueprint('enemy',
-  {'transform', height=0},
+  {'transform', height=8},
   {'billboard', image = game.resources.sprites.enemy},
-  {'tag', tags={'action'}},
+  {'tag', tags={'action', 'collides_with_level'}},
   {'collider', poly=geom.make_octagon(8)},
   {'enemy'})
 

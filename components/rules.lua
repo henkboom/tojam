@@ -6,8 +6,8 @@ qualifier_functions.most = function(players, type)
     local most_count = -math.huge
     local most_player
     for _, player in ipairs(players) do
-      if player.character.attributes[type] > most_count then
-        most_count = player.character.attributes[type]
+      if player.player.attributes[type] > most_count then
+        most_count = player.player.attributes[type]
         most_player = player
       end
     end
@@ -18,8 +18,8 @@ qualifier_functions.least = function(players, type)
     local least_count = math.huge
     local least_player
     for _, player in ipairs(players) do
-      if player.character.attributes[type] < least_count then
-        least_count = player.character.attributes[type]
+      if player.player.attributes[type] < least_count then
+        least_count = player.player.attributes[type]
         least_player = player
       end
     end
@@ -32,13 +32,13 @@ end
   
 qualifier_functions.adds = function(targets, type, quantity)
     for _, target in ipairs(targets) do
-      target.character.attributes[type] = target.character.attributes[type] + quantity
+      target.player.attributes[type] = target.player.attributes[type] + quantity
     end
   end
   
 qualifier_functions.removes = function(targets, type, quantity)
     for _, target in ipairs(targets) do
-      target.character.attributes[type] = target.character.attributes[type] - quantity
+      target.player.attributes[type] = target.player.attributes[type] - quantity
     end
   end
 
@@ -60,7 +60,7 @@ function register_event(player, type)
 end
 
 function end_round()
-  local players = game.actors.get("character")
+  local players = game.actors.get("player")
   for _, rule in ipairs(rules) do
     if game.c.round_qualifiers[rule.condition_qualifier] then
       fire_rule(players, rule)
@@ -78,9 +78,9 @@ function fire_rule(players, rule)
 end
 
 function check_victory()
-  local players = game.actors.get("character")
+  local players = game.actors.get("player")
   for _, player in ipairs(players) do
-    if player.character.attributes["point"] >= 100 then
+    if player.player.attributes["point"] >= 100 then
       print("VICTORY!")
       os.exit()
     end

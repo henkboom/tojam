@@ -7,7 +7,7 @@ local v2 = require 'dokidoki.v2'
 function make()
   return game.make_game(
     {'update_setup', 'update', 'collision_check', 'update_cleanup'},
-    {'draw_setup', 'draw', 'draw_gui', 'draw_debug'},
+    {'draw_setup', 'draw', 'draw_debug', 'draw_gui', 'draw_debug_gui'},
     function (game)
       glfw.SetWindowTitle('tojam')
       math.randomseed(os.time())
@@ -38,13 +38,14 @@ function make()
       game.init_component('voting')
 
       game.init_component('level')
+      game.level.load(game.resources.level)
 
-      game.actors.new(game.blueprints.character,
+      game.actors.new(game.blueprints.player,
         {'transform', pos=v2(0, 0)},
-        {'character', player=1})
-      game.actors.new(game.blueprints.character,
+        {'player', number=1})
+      game.actors.new(game.blueprints.player,
         {'transform', pos=v2(200, 120)},
-        {'character', player=2})
+        {'player', number=2})
       game.actors.new(game.blueprints.enemy,
         {'transform', pos=v2(100, 20)},
         {'enemy'})

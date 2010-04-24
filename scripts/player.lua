@@ -2,9 +2,9 @@ local gl = require 'gl'
 local graphics = require 'dokidoki.graphics'
 local v2 = require 'dokidoki.v2'
 
-assert(player, 'missing player argument')
+assert(number, 'missing player argument')
 
-local character_facing = v2(1, 0)
+local player_facing = v2(1, 0)
 -- distance travelled since last step
 local step_progress = 0
 
@@ -20,34 +20,34 @@ end
 function update()
   -- movement
   local direction =
-    game.camera.transform_controls(game.controls.get_direction(player))
+    game.camera.transform_controls(game.controls.get_direction(number))
 
   local sign = attributes.speed >= 0 and 1 or -1
   local speed_multiplier = 1 + sign * math.sqrt(sign * attributes.speed)
-                               * game.c.character_speed_offset
+                               * game.c.player_speed_offset
 
-  local speed = math.max(game.c.character_min_speed,
-                         game.c.character_base_speed * speed_multiplier)
+  local speed = math.max(game.c.player_min_speed,
+                         game.c.player_base_speed * speed_multiplier)
   local vel = direction * speed
   self.transform.pos = self.transform.pos + vel
 
   -- step tracking
   step_progress = step_progress + v2.mag(vel)
-  while step_progress >= game.c.character_step_distance do
-    step_progress = step_progress - game.c.character_step_distance
+  while step_progress >= game.c.player_step_distance do
+    step_progress = step_progress - game.c.player_step_distance
     attributes.step = attributes.step + 1
     game.rules.register_event(self, 'step')
   end
 
   -- orientation
   if direction ~= v2.zero then
-    character_facing = direction
+    player_facing = direction
   end
 
   -- attack
-  if game.controls.button_pressed(player, 'action') then
-    print('attack', character_facing)
-    local offset = character_facing * 8
+  if game.controls.button_pressed(number, 'action') then
+    print('attack', player_facing)
+    local offset = player_facing * 8
     game.actors.new(game.blueprints.attack_hitbox,
       {'transform', pos=self.transform.pos + offset},
       {'attack_hitbox', source=self, offset=offset})
@@ -61,12 +61,16 @@ function draw_debug()
   end
 
   gl.glPushMatrix()
-  gl.glTranslated(self.transform.pos.x+10, self.transform.pos.y+8, 0)
+  game.camera.do_billboard_transform(
+    self.transform.pos.y,
+    self.transform.height,
+    self.transform.pos.x, 0)
+  gl.glTranslated(10, 8, 0)
   graphics.draw_text(game.resources.font, table.concat(lines))
   gl.glPopMatrix()
 end
 
-game.collision.add_collider(self, 'character', function (other, correction)
+game.collision.add_collider(self, 'player', function (other, correction)
   self.transform.pos = self.transform.pos + correction/2
   other.transform.pos = other.transform.pos - correction/2
 end)

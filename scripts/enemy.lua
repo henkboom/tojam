@@ -45,7 +45,7 @@ function die()
   end
 end
 
-game.collision.add_collider(self, 'character', function (other, correction)
+game.collision.add_collider(self, 'player', function (other, correction)
   self.transform.pos = self.transform.pos + correction/2
   other.transform.pos = other.transform.pos - correction/2
 end)
