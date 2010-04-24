@@ -163,7 +163,7 @@ game.actors.new_generic('voting_component', function ()
 		if not voting then return end
 		
 		gl.glPushMatrix()
-		gl.glTranslated(2, game.opengl_2d.height - 40, 0)
+		gl.glTranslated(2, game.gui.height - 40, 0)
 		gl.glScaled(4, 4, 4)
 		draw_line('player voting...')
 		draw_line('')
