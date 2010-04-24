@@ -73,5 +73,9 @@ end)
 game.collision.add_collider(self, 'attack_hitbox', function (other, correction)
   if player ~= other.attack_hitbox.player then
     self.transform.pos = self.transform.pos + correction * 2
+    attributes["damage"] = attributes["damage"] + 1
+    game.rules.register_event(self, "damage")
+    other.attack_hitbox.hit = true
+    game.resources.sfx["damage"]:play(1)
   end
 end)
