@@ -13,7 +13,9 @@ local COLUMN_SPACING = 7
 local LINE_SPACING = 4
 local LINE_HEIGHT = 7
 
-local PHASES = { none = 'none', choosing_rule = 'choosing_rule', voting = 'voting' }
+local PHASES = { 
+	none = 'none', election_start = 'election_start', choosing_rule = 'choosing_rule', voting = 'voting', election_results = 'election_results' 
+}
 local current_phase = PHASES.none
 
 local categories = {
@@ -26,11 +28,13 @@ local current_category
 local current_choices = { 1, 1, 1, 1 }
 local proposing_player = 0
 local current_votes = {}
+local feedback_timer = 2
 local seconds_to_vote = 0
+local rule_passed = false
 
 function start()
   print('started choosing a new rule')
-  current_phase = PHASES.choosing_rule
+  current_phase = PHASES.election_start
 	
 	-- reset current category
 	current_category = 1
@@ -41,7 +45,7 @@ function start()
 	proposing_player = 1
 	
 	seconds_to_vote = 5
-	current_votes = { false, false, false }
+	current_votes = { false, false, false, false }
 end
 
 game.actors.new_generic('voting_component', function ()
@@ -64,30 +68,47 @@ game.actors.new_generic('voting_component', function ()
 				return
 			end
 		
-			if not first_update then
-				current_category = current_category + (left and -1 or 0) + (right and 1 or 0)
-				if current_category == 0 then current_category = 4 end
-				if current_category == table.getn(categories)+1 then current_category = 1 end
-				
-				current_choices[current_category] = current_choices[current_category] + (up and -1 or 0) + (down and 1 or 0)
-				if current_choices[current_category] == 0 then current_choices[current_category] = table.getn(categories[current_category]) end
-				if current_choices[current_category] == table.getn(categories[current_category])+1 then current_choices[current_category] = 1 end
-			else
-				first_update = false
-			end
+			current_category = current_category + (left and -1 or 0) + (right and 1 or 0)
+			if current_category == 0 then current_category = 4 end
+			if current_category == table.getn(categories)+1 then current_category = 1 end
+			
+			current_choices[current_category] = current_choices[current_category] + (up and -1 or 0) + (down and 1 or 0)
+			if current_choices[current_category] == 0 then current_choices[current_category] = table.getn(categories[current_category]) end
+			if current_choices[current_category] == table.getn(categories[current_category])+1 then current_choices[current_category] = 1 end
 		end
 		
 		if current_phase == PHASES.voting then
 			if seconds_to_vote <= 0 then
-				current_phase = PHASES.none
+				current_phase = PHASES.election_results
 				-- TODO : take majority of votes and elect rule if > 50%
 				game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
-				game.action.resume()
+				rule_passed = true
 				return
 			else
 				seconds_to_vote = seconds_to_vote - 1/60
 			end
 		end
+		
+		if current_phase == PHASES.election_start then
+			if feedback_timer <= 0 then
+				current_phase = PHASES.choosing_rule
+				feedback_timer = 2
+				return
+			else
+				feedback_timer = feedback_timer - 1/60
+			end
+		end
+		
+		if current_phase == PHASES.election_results then
+			if feedback_timer <= 0 then
+				current_phase = PHASES.none
+				feedback_timer = 2
+				game.action.resume()
+				return
+			else
+				feedback_timer = feedback_timer - 1/60
+			end
+		end		
   end
 	
 	local function draw_line(text)
@@ -122,7 +143,7 @@ game.actors.new_generic('voting_component', function ()
 		local total_height = table.getn(choices) * (8 + LINE_SPACING) -- where 10 is graphics.font_map_line_height(game.resources.font)
 		
 		-- highlight the back for selected category
-		gl.glColor4d(0.5, 0.5, 0.5, 0.5)
+		gl.glColor4d(0, 0, 0, 0.5)
 		if category == current_category then
 			gl.glBegin(gl.GL_QUADS)
 				gl.glVertex2d(-1, 0)  
@@ -192,7 +213,7 @@ game.actors.new_generic('voting_component', function ()
 		draw_line('player '.. player .. ' votes!')
 		if current_phase == PHASES.voting then
 			draw_line('yes / no')
-		else
+		elseif current_phase == PHASES.choosing_rule then
 			draw_line('wait for the rule...')		
 		end
 	end	
@@ -239,21 +260,25 @@ game.actors.new_generic('voting_component', function ()
 			draw_quad()		
 		gl.glPopMatrix()
 		-- four compartments
+		gl.glColor4d(0.5, 0.5, 0.5, proposing_player == 1 and 0.75 or 0.5)
 		gl.glPushMatrix()
 			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN, height - BOX_MARGIN, 0)
 			gl.glScaled(safe_width / 2, safe_height / 2, 1)
 			draw_quad()
 		gl.glPopMatrix()
+		gl.glColor4d(0.5, 0.5, 0.5, proposing_player == 2 and 0.75 or 0.5)
 		gl.glPushMatrix()
 			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN + safe_width / 2 + BOX_MARGIN, height - BOX_MARGIN, 0)
 			gl.glScaled(safe_width / 2, safe_height / 2, 1)
 			draw_quad()
 		gl.glPopMatrix()
+		gl.glColor4d(0.5, 0.5, 0.5, proposing_player == 3 and 0.75 or 0.5)
 		gl.glPushMatrix()
 			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN - INFO_BAR_HEIGHT - BOX_MARGIN, 0)
 			gl.glScaled(safe_width / 2, safe_height / 2, 1)
 			draw_quad()
 		gl.glPopMatrix()
+		gl.glColor4d(0.5, 0.5, 0.5, proposing_player == 4 and 0.75 or 0.5)
 		gl.glPushMatrix()
 			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN + safe_width / 2 + BOX_MARGIN, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN - INFO_BAR_HEIGHT - BOX_MARGIN, 0)
 			gl.glScaled(safe_width / 2, safe_height / 2, 1)
@@ -279,22 +304,27 @@ game.actors.new_generic('voting_component', function ()
 			if proposing_player == 4 then draw_proposing_player() else draw_voting_player(4) end
 		gl.glPopMatrix()			
 		
-		-- draw the countdown
-		if current_phase == PHASES.voting then
-			gl.glPushMatrix()
-				gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN * 2 + (safe_width + BOX_MARGIN) / 2, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN * 2.75, 0)
-				gl.glScaled(2, 2, 1)
-				local text = seconds_to_vote <= 0 and '' or math.ceil(seconds_to_vote) .. ' seconds left to vote!' -- prevent glitches
-				local width = game.resources.font_string_width(text)
-				gl.glTranslated(-width/2, 0, 0)
-				draw_line(text)
-			gl.glPopMatrix()
-		end
+		-- draw the infobar content
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN * 2 + (safe_width + BOX_MARGIN) / 2, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN * 2.75, 0)
+			gl.glScaled(2, 2, 1)
+			
+			local text = ''
+			if current_phase == PHASES.election_start then text = 'election time again, gentlemen!'
+			elseif current_phase == PHASES.choosing_rule then text = 'a new rule is being proposed...'
+			elseif current_phase == PHASES.voting then text = seconds_to_vote <= 0 and '' or math.ceil(seconds_to_vote) .. ' seconds left to vote!' -- prevent glitches
+			elseif current_phase == PHASES.election_results then text = rule_passed and 'new rule was elected!' or 'new rule was rejected...'
+			end
+			
+			local width = game.resources.font_string_width(text)
+			gl.glTranslated(-width/2, 0, 0)
+			draw_line(text)
+		gl.glPopMatrix()
 		
 		-- draw the existing rules
 		gl.glPushMatrix()
-		gl.glTranslated(BOX_MARGIN * 2, game.gui.height - BOX_MARGIN * 2, 0)
-		draw_existing_rules()
+			gl.glTranslated(BOX_MARGIN * 2, game.gui.height - BOX_MARGIN * 2, 0)
+			draw_existing_rules()
 		gl.glPopMatrix()
   end
 
