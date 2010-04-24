@@ -1,13 +1,18 @@
 -- constants, accessed as game.c.___
 
-debug_line_count = 5
-
+-- game flow
 action_duration = 60 * 5
+
+-- level settings
+
+level_size = 16
+level_tile_size = 16
 
 -- character settings
 
 character_base_speed = 2
 character_speed_offset = 0.2
+character_min_speed = 0.2
 character_step_distance = 32
 
 -- controls for the four players

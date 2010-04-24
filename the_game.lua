@@ -38,7 +38,7 @@ function make()
       game.init_component('voting')
 
       game.actors.new(game.blueprints.character,
-        {'transform', pos=v2(100, 100)},
+        {'transform', pos=v2(0, 0)},
         {'character', player=1})
       game.actors.new(game.blueprints.character,
         {'transform', pos=v2(200, 120)},
