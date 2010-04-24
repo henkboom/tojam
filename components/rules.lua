@@ -48,6 +48,7 @@ function add_rule(type1, qual1, type2, qual2)
     event_rules[#event_rules+1] = rule
   else
     round_rules[#round_rules+1] = rule
+  end
 end
 
 function register_event(player, type)
