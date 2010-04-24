@@ -1,4 +1,4 @@
-assert(player, 'missing player argument')
+assert(source, 'missing source argument')
 assert(offset, 'missing offset argument')
 
 local frame_passed = false

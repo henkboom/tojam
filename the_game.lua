@@ -45,6 +45,9 @@ function make()
       game.actors.new(game.blueprints.character,
         {'transform', pos=v2(200, 120)},
         {'character', player=2})
+      game.actors.new(game.blueprints.enemy,
+        {'transform', pos=v2(100, 20)},
+        {'enemy'})
 
       game.action.resume()
     end)
