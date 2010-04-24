@@ -35,6 +35,7 @@ function update()
   step_progress = step_progress + v2.mag(vel)
   while step_progress >= game.c.character_step_distance do
     step_progress = step_progress - game.c.character_step_distance
+    attributes.step = attributes.step + 1
     game.rules.register_event(self, 'step')
   end
 
