@@ -49,10 +49,10 @@ functions.remove = function(targets, type)
 
 function add_rule(type1, qual1, type2, qual2)
   local rule = {}
-  rule.condition_type = type1
-  rule.condition_qualifier = qual1
-  rule.consequence_type = type2
-  rule.consequence_qualifier = qual2
+  rule.condition_type = condition_type[type1]
+  rule.condition_qualifier = condition_qualifier[qual1]
+  rule.consequence_type = consequence_type[type2]
+  rule.consequence_qualifier = consequence_qualifier[qual2]
   rules[#rules+1] = rule
 end
 
