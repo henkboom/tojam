@@ -5,6 +5,10 @@ local v2 = require 'dokidoki.v2'
 -- voting.lua
 -- controls the voting phase
 
+local BOX_MARGIN = 5
+local EXISTING_RULES_WIDTH = 230
+local INFO_BAR_HEIGHT = 30
+
 local COLUMN_SPACING = 7
 local LINE_SPACING = 4
 local LINE_HEIGHT = 7
@@ -21,6 +25,8 @@ local categories = {
 local current_category
 local current_choices = { 1, 1, 1, 1 }
 local proposing_player = 0
+local current_votes = {}
+local seconds_to_vote = 0
 
 local first_update
 function start()
@@ -31,10 +37,12 @@ function start()
 	current_category = 1
 	
 	-- change the proposing player
-	-- proposing_player = proposing_player + 1
-	-- if proposing_player > 4 then proposing_player = 1 end
-	-- for now just one player
+	--proposing_player = proposing_player + 1
+	--if proposing_player > 4 then proposing_player = 1 end
 	proposing_player = 1
+	
+	seconds_to_vote = 5
+	current_votes = { false, false, false }
 	
 	first_update = true -- eeh
 end
@@ -58,9 +66,7 @@ game.actors.new_generic('voting_component', function ()
 		
 		if current_phase == PHASES.choosing_rule then
 			if game.controls.action_pressed(proposing_player) then
-				current_phase = PHASES.none -- actually should change to voting
-				game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
-				game.action.resume()
+				current_phase = PHASES.voting
 				return
 			end
 		
@@ -74,6 +80,18 @@ game.actors.new_generic('voting_component', function ()
 				if current_choices[current_category] == table.getn(categories[current_category])+1 then current_choices[current_category] = 1 end
 			else
 				first_update = false
+			end
+		end
+		
+		if current_phase == PHASES.voting then
+			if seconds_to_vote <= 0 then
+				current_phase = PHASES.none
+				-- TODO : take majority of votes and elect rule if > 50%
+				game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
+				game.action.resume()
+				return
+			else
+				seconds_to_vote = seconds_to_vote - 1/60
 			end
 		end
   end
@@ -110,7 +128,7 @@ game.actors.new_generic('voting_component', function ()
 		local total_height = table.getn(choices) * (8 + LINE_SPACING) -- where 10 is graphics.font_map_line_height(game.resources.font)
 		
 		-- highlight the back for selected category
-		gl.glColor3d(0.25, 0.25, 0.25)
+		gl.glColor4d(0.5, 0.5, 0.5, 0.5)
 		if category == current_category then
 			gl.glBegin(gl.GL_QUADS)
 				gl.glVertex2d(-1, 0)  
@@ -155,31 +173,135 @@ game.actors.new_generic('voting_component', function ()
 	local function draw_existing_rules()
 		gl.glPushMatrix()
 		gl.glScaled(2, 2, 2)
-		gl.glTranslated(2, (math.max(table.getn(game.rules.rules),1)+1) * 10, 0)
 		draw_line('existing rules :')
+		draw_line('----------------')
+		gl.glColor3d(0.85, 0.85, 0.85)
 		for _, rule in ipairs(game.rules.rules) do
 			draw_rule(rule)
 		end
 		if table.getn(game.rules.rules) == 0 then draw_line('(none)') end
+		gl.glColor3d(1, 1, 1)
 		gl.glPopMatrix()
 	end
-  
-  function draw()
-		if current_phase == PHASES.none then return end
 	
+	local function draw_quad()
+		gl.glBegin(gl.GL_QUADS)
+			gl.glVertex2d(0, 0)  
+			gl.glVertex2d(0, -1)				
+			gl.glVertex2d(1, -1) 
+			gl.glVertex2d(1, 0) 
+		gl.glEnd()
+	end
+	
+	local function draw_voting_player(player)
+		gl.glScaled(2, 2, 1)
+		draw_line('player '.. player .. ' votes!')
+		if current_phase == PHASES.voting then
+			draw_line('yes / no')
+		else
+			draw_line('wait for the rule...')		
+		end
+	end	
+	
+	local function draw_proposing_player()
+		gl.glScaled(2, 2, 1)
 		if current_phase == PHASES.choosing_rule then
-			gl.glPushMatrix()
-			gl.glTranslated(2, game.opengl_2d.height - 40, 0)
-			gl.glScaled(4, 4, 4)
-			draw_line('player voting...')
-			draw_line('')
+			draw_line('player '.. proposing_player .. ' proposes the rule!')
 			for i = 1,4 do
 				draw_choice(i)
-			end
-			gl.glPopMatrix()
-			
-			draw_existing_rules()
+			end			
+		else
+			-- fake rule so I can print it... ^_^
+			local rule = {}
+			rule.condition_qualifier = game.c.condition_qualifiers[current_choices[1]]
+			rule.condition_type = game.c.condition_types[current_choices[2]]
+			rule.consequence_qualifier = game.c.consequence_qualifiers[current_choices[3]]		
+			rule.consequence_type = game.c.consequence_types[current_choices[4]]			
+			draw_line('player '.. proposing_player .. ' has chosen this rule :')
+			draw_rule(rule)
 		end
+	end
+  
+  function draw_gui()
+		if current_phase == PHASES.none then return end
+		
+		local width = game.opengl_2d.width
+		local height = game.opengl_2d.height
+		
+		-- split screen SIX ways!
+		local safe_width = width - BOX_MARGIN * 4 - EXISTING_RULES_WIDTH
+		local safe_height = height - BOX_MARGIN * 4 - INFO_BAR_HEIGHT
+		gl.glColor4d(0.5, 0.5, 0.5, 0.5)
+		-- existing rules
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN, height - BOX_MARGIN, 0)
+			gl.glScaled(EXISTING_RULES_WIDTH, safe_height + BOX_MARGIN + INFO_BAR_HEIGHT + BOX_MARGIN, 1)
+			draw_quad()		
+		gl.glPopMatrix()
+		-- info bar
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN, 0)
+			gl.glScaled(safe_width + BOX_MARGIN, INFO_BAR_HEIGHT, 1)
+			draw_quad()		
+		gl.glPopMatrix()
+		-- four compartments
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN, height - BOX_MARGIN, 0)
+			gl.glScaled(safe_width / 2, safe_height / 2, 1)
+			draw_quad()
+		gl.glPopMatrix()
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN + safe_width / 2 + BOX_MARGIN, height - BOX_MARGIN, 0)
+			gl.glScaled(safe_width / 2, safe_height / 2, 1)
+			draw_quad()
+		gl.glPopMatrix()
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN - INFO_BAR_HEIGHT - BOX_MARGIN, 0)
+			gl.glScaled(safe_width / 2, safe_height / 2, 1)
+			draw_quad()
+		gl.glPopMatrix()
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN + safe_width / 2 + BOX_MARGIN, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN - INFO_BAR_HEIGHT - BOX_MARGIN, 0)
+			gl.glScaled(safe_width / 2, safe_height / 2, 1)
+			draw_quad()
+		gl.glPopMatrix()
+		gl.glColor3d(1, 1, 1)
+		
+		-- draw the rule selection for the choosing player
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN * 2, height - BOX_MARGIN * 2, 0)
+			if proposing_player == 1 then draw_proposing_player() else draw_voting_player(1) end
+		gl.glPopMatrix()
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN + safe_width / 2 + BOX_MARGIN * 2, height - BOX_MARGIN * 2, 0)
+			if proposing_player == 2 then draw_proposing_player() else draw_voting_player(2) end
+		gl.glPopMatrix()
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN * 2, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN - INFO_BAR_HEIGHT - BOX_MARGIN * 2, 0)
+			if proposing_player == 3 then draw_proposing_player() else draw_voting_player(3) end
+		gl.glPopMatrix()
+		gl.glPushMatrix()
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN + safe_width / 2 + BOX_MARGIN * 2, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN - INFO_BAR_HEIGHT - BOX_MARGIN * 2, 0)
+			if proposing_player == 4 then draw_proposing_player() else draw_voting_player(4) end
+		gl.glPopMatrix()			
+		
+		-- draw the countdown
+		if current_phase == PHASES.voting then
+			gl.glPushMatrix()
+				gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN * 2 + (safe_width + BOX_MARGIN) / 2, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN * 2.75, 0)
+				gl.glScaled(2, 2, 1)
+				local text = seconds_to_vote <= 0 and '' or math.ceil(seconds_to_vote) .. ' seconds left to vote!' -- prevent glitches
+				local width = game.resources.font_string_width(text)
+				gl.glTranslated(-width/2, 0, 0)
+				draw_line(text)
+			gl.glPopMatrix()
+		end
+		
+		-- draw the existing rules
+		gl.glPushMatrix()
+		gl.glTranslated(BOX_MARGIN * 2, game.opengl_2d.height - BOX_MARGIN * 2, 0)
+		draw_existing_rules()
+		gl.glPopMatrix()
   end
 
 end)
