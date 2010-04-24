@@ -44,9 +44,9 @@ function start()
 	current_category = 1
 	
 	-- change the proposing player
-	--proposing_player = proposing_player + 1
-	--if proposing_player > 4 then proposing_player = 1 end
-	proposing_player = 1
+	proposing_player = proposing_player + 1
+	if proposing_player > 2 then proposing_player = 1 end
+	-- proposing_player = 1
 	
 	seconds_to_vote = 5
 	current_votes = { false, false, false, false }
@@ -60,11 +60,6 @@ game.actors.new_generic('voting_component', function ()
 
   function update()			
 		if current_phase == PHASES.none then return end
-	
-		local up = game.controls.button_pressed(proposing_player, 'up')
-		local down = game.controls.button_pressed(proposing_player, 'down')				
-		local left = game.controls.button_pressed(proposing_player, 'left')
-		local right = game.controls.button_pressed(proposing_player, 'right')
 		
 		if current_phase == PHASES.choosing_rule then
 			if game.controls.button_pressed(proposing_player, 'action') then
@@ -72,6 +67,11 @@ game.actors.new_generic('voting_component', function ()
 				current_votes[proposing_player] = false
 				return
 			end
+				
+			local up = game.controls.button_pressed(proposing_player, 'up')
+			local down = game.controls.button_pressed(proposing_player, 'down')				
+			local left = game.controls.button_pressed(proposing_player, 'left')
+			local right = game.controls.button_pressed(proposing_player, 'right')
 		
 			current_category = current_category + (left and -1 or 0) + (right and 1 or 0)
 			if current_category == 0 then current_category = 4 end
@@ -85,17 +85,29 @@ game.actors.new_generic('voting_component', function ()
 		if current_phase == PHASES.voting then
 			if seconds_to_vote <= 0 then
 				current_phase = PHASES.election_results
-				-- TODO : take majority of votes and elect rule if > 50%
-				game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
-				rule_passed = true
+				local count_yays = 0
+				for i = 1,2 do count_yays = count_yays + (current_votes[i] and 1 or 0) end
+				if count_yays == 1 then
+					game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
+					rule_passed = true
+				else
+					rule_passed = false
+				end
 				return
 			else
 				seconds_to_vote = seconds_to_vote - 1/60
 			end
 			
 			-- do the selection stuff for voting players
-			for i = 1,4 do
-				
+			for i = 1,2 do
+				if i ~= proposing_player then
+					local up = game.controls.button_pressed(i, 'up')
+					local down = game.controls.button_pressed(i, 'down')				
+					
+					if up then current_votes[i] = false
+					elseif down then current_votes[i] = true
+					end
+				end
 			end
 		end
 		
@@ -259,7 +271,7 @@ game.actors.new_generic('voting_component', function ()
 		gl.glScaled(2, 2, 1)
 		local title = ''
 		if current_phase == PHASES.voting then
-			draw_line('player '.. player .. ' has yet to vote!')
+			draw_line('player '.. player .. ' is voting!')
 			draw_voting_choice(player)
 		elseif current_phase == PHASES.election_start then			
 			draw_line('player '.. player .. ' votes!')
