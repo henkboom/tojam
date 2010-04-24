@@ -42,12 +42,12 @@ functions.remove = function(targets, type)
     end
   end
 
-function add_rule(type1, qual1, type2, qual2)
+function add_rule(qual1, type1, qual2, type2)
   local rule = {}
-  rule.condition_type = condition_types[type1]
-  rule.condition_qualifier = condition_qualifiers[qual1]
-  rule.consequence_type = consequence_types[type2]
-  rule.consequence_qualifier = consequence_qualifiers[qual2]
+  rule.condition_type = game.c.condition_types[type1]
+  rule.condition_qualifier = game.c.condition_qualifiers[qual1]
+  rule.consequence_type = game.c.consequence_types[type2]
+  rule.consequence_qualifier = game.c.consequence_qualifiers[qual2]
   rules[#rules+1] = rule
 end
 

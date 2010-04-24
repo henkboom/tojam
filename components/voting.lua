@@ -83,6 +83,10 @@ game.actors.new_generic('voting_component', function ()
 		gl.glTranslated(0, -10, 0)
   end	
 	
+	local function add_plural(text)
+		return text
+	end
+	
   local function draw_choice(category)
 		gl.glPushMatrix()
 		
@@ -94,7 +98,7 @@ game.actors.new_generic('voting_component', function ()
 		-- evaluate size of column
 		local max_width = 0
 		for index, choice in ipairs(choices) do
-			max_width = math.max(max_width, game.resources.font_string_width(choice))
+			max_width = math.max(max_width, game.resources.font_string_width(add_plural(choice)))
 		end
 		local total_height = table.getn(choices) * (8 + LINE_SPACING) -- where 10 is graphics.font_map_line_height(game.resources.font)
 		
@@ -114,12 +118,7 @@ game.actors.new_generic('voting_component', function ()
 			local choice_count = table.getn(choices)
 			for i = 0, choice_count-1 do
 				local index = ((i + (current_choice-1)) % (choice_count)) + 1
-				local choice = choices[index]
-				
-				-- add plural if needed
-				if category == 2 then
-					if categories[category-1][current_choices[category-1]] ~= 1 then choice = choice .. 's' end
-				end
+				local choice = add_plural(choices[index])
 			
 				gl.glTranslated(0, -LINE_SPACING / 2, 0)
 				if i == 0 then
@@ -138,7 +137,7 @@ game.actors.new_generic('voting_component', function ()
 			end
 		else
 			gl.glTranslated(0, -LINE_SPACING / 2, 0)
-			graphics.draw_text(game.resources.font, choices[current_choice])
+			graphics.draw_text(game.resources.font, add_plural(choices[current_choice]))
 		end
 		
 		gl.glPopMatrix()
