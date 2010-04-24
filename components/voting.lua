@@ -28,7 +28,6 @@ local proposing_player = 0
 local current_votes = {}
 local seconds_to_vote = 0
 
-local first_update
 function start()
   print('started choosing a new rule')
   current_phase = PHASES.choosing_rule
@@ -43,8 +42,6 @@ function start()
 	
 	seconds_to_vote = 5
 	current_votes = { false, false, false }
-	
-	first_update = true -- eeh
 end
 
 game.actors.new_generic('voting_component', function ()
@@ -53,29 +50,26 @@ game.actors.new_generic('voting_component', function ()
 		return x>0 and 1 or x<0 and -1 or 0
 	end
 
-	local last_direction = v2.zero
   function update()			
 		if current_phase == PHASES.none then return end
 	
-		-- hacky differential state stuff
-		local direction = game.controls.get_direction(proposing_player)
-		local delta_direction = direction - last_direction
-		last_direction = direction
-		delta_direction.x = sign(delta_direction.x) * (direction.x == 0 and 0 or 1)
-		delta_direction.y = sign(delta_direction.y) * (direction.y == 0 and 0 or 1)
+		local up = game.controls.button_pressed(proposing_player, 'up')
+		local down = game.controls.button_pressed(proposing_player, 'down')				
+		local left = game.controls.button_pressed(proposing_player, 'left')
+		local right = game.controls.button_pressed(proposing_player, 'right')
 		
 		if current_phase == PHASES.choosing_rule then
-			if game.controls.action_pressed(proposing_player) then
+			if game.controls.button_pressed(proposing_player, 'action') then
 				current_phase = PHASES.voting
 				return
 			end
 		
 			if not first_update then
-				current_category = current_category + delta_direction.x
+				current_category = current_category + (left and -1 or 0) + (right and 1 or 0)
 				if current_category == 0 then current_category = 4 end
 				if current_category == table.getn(categories)+1 then current_category = 1 end
 				
-				current_choices[current_category] = current_choices[current_category] - delta_direction.y
+				current_choices[current_category] = current_choices[current_category] + (up and -1 or 0) + (down and 1 or 0)
 				if current_choices[current_category] == 0 then current_choices[current_category] = table.getn(categories[current_category]) end
 				if current_choices[current_category] == table.getn(categories[current_category])+1 then current_choices[current_category] = 1 end
 			else
@@ -225,8 +219,8 @@ game.actors.new_generic('voting_component', function ()
   function draw_gui()
 		if current_phase == PHASES.none then return end
 		
-		local width = game.opengl_2d.width
-		local height = game.opengl_2d.height
+		local width = game.gui.width
+		local height = game.gui.height
 		
 		-- split screen SIX ways!
 		local safe_width = width - BOX_MARGIN * 4 - EXISTING_RULES_WIDTH
@@ -299,7 +293,7 @@ game.actors.new_generic('voting_component', function ()
 		
 		-- draw the existing rules
 		gl.glPushMatrix()
-		gl.glTranslated(BOX_MARGIN * 2, game.opengl_2d.height - BOX_MARGIN * 2, 0)
+		gl.glTranslated(BOX_MARGIN * 2, game.gui.height - BOX_MARGIN * 2, 0)
 		draw_existing_rules()
 		gl.glPopMatrix()
   end

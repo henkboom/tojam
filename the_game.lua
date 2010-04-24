@@ -11,13 +11,11 @@ function make()
     function (game)
       glfw.SetWindowTitle('tojam')
       math.randomseed(os.time())
+
+      -- standard components
       game.init_component('exit_handler')
       game.exit_handler.trap_esc = true
       game.init_component('keyboard')
-      game.init_component('opengl_2d')
-      game.opengl_2d.background_color = {0, 0, 0}
-      game.opengl_2d.width = 800
-      game.opengl_2d.height = 600
 
       -- information components
       game.init_component('c')
@@ -28,6 +26,11 @@ function make()
       -- general components
       game.init_component('collision')
       game.init_component('controls')
+
+      -- drawing components
+      game.init_component('opengl')
+      game.init_component('camera')
+      game.init_component('gui')
 
       -- game logic components
 			game.init_component('rules')
