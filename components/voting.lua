@@ -134,6 +134,17 @@ game.actors.new_generic('voting_component', function ()
 		gl.glPopMatrix()
 		gl.glTranslated(max_width + COLUMN_SPACING / 2, 0, 0)
   end
+	
+	local function draw_existing_rules()
+		gl.glPushMatrix()
+		gl.glScaled(2, 2, 2)
+		gl.glTranslated(2, table.getn(game.rules.rules) * 10, 0)
+		for _, rule in ipairs(game.rules.rules) do
+			draw_line(string.format('%s %s %s %s',
+				rule.condition_qualifier, rule.condition_type, rule.consequence_qualifier, rule.consequence_type))
+		end
+		gl.glPopMatrix()
+	end
   
   function draw()
 		if not voting then return end
@@ -147,6 +158,8 @@ game.actors.new_generic('voting_component', function ()
 			draw_choice(i)
 		end
 		gl.glPopMatrix()
+		
+		draw_existing_rules()
   end
 
 end)
