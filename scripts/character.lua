@@ -7,7 +7,7 @@ local character_facing = v2(1, 0)
 local step_progress = 0
 
 -- initialize tracked attributes
-local attributes = {}
+attributes = {}
 for _, v in ipairs(game.c.condition_types) do
   attributes[v] = 0
 end
@@ -19,7 +19,9 @@ function update()
   -- movement
   local direction = game.controls.get_direction(player)
 
-  local speed_multiplier = 1 + attributes.speed * game.c.character_speed_offset
+  print(attributes.speed)
+  local speed_multiplier =
+    1 + math.sqrt(attributes.speed) * game.c.character_speed_offset
   local speed = game.c.character_base_speed * speed_multiplier
   local vel = direction * speed
   self.transform.pos = self.transform.pos + vel
@@ -29,7 +31,7 @@ function update()
   while step_progress >= game.c.character_step_distance do
     step_progress = step_progress - game.c.character_step_distance
     print("step!")
-    --game.rules.register_event(self, 'step')
+    game.rules.register_event(self, 'step')
   end
 
   -- orientation

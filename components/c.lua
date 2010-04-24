@@ -7,7 +7,7 @@ action_duration = 60 * 5
 -- character settings
 
 character_base_speed = 2
-character_speed_offset = 0.1
+character_speed_offset = 0.2
 character_step_distance = 32
 
 -- controls for the four players
