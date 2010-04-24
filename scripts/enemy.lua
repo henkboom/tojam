@@ -45,6 +45,6 @@ game.collision.add_collider(self, 'attack_hitbox', function (other, correction)
     game.resources.sfx["damage"]:play(1)
     target = other.attack_hitbox.source
     health = health - 1
-    self.billboard.flash({0.25, 0.25, 0.25})
+    self.billboard.flash({1, 0, 0})
   end
 end)
