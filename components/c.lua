@@ -7,6 +7,7 @@ action_duration = 60 * 5
 -- character settings
 
 character_speed = 2
+character_step_distance = 16
 
 -- controls for the four players
 keys = {
