@@ -87,5 +87,6 @@ game.collision.add_collider(self, 'attack_hitbox', function (other, correction)
     game.rules.register_event(self, "damage")
     other.attack_hitbox.hit = true
     game.resources.sfx["damage"]:play(1)
+    self.billboard.flash({1, 0, 0})
   end
 end)
