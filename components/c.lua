@@ -2,7 +2,7 @@
 
 debug_line_count = 5
 
-action_duration = 60 * 5
+action_duration = 60 * 1
 
 -- character settings
 
