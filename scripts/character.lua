@@ -1,3 +1,5 @@
+local gl = require 'gl'
+local graphics = require 'dokidoki.graphics'
 local v2 = require 'dokidoki.v2'
 
 assert(player, 'missing player argument')
@@ -46,6 +48,18 @@ function update()
       {'transform', pos=self.transform.pos + offset},
       {'attack_hitbox', player=player, offset=offset})
   end
+end
+
+function draw_debug()
+  local lines = {}
+  for k,v in pairs(attributes) do
+    table.insert(lines, string.format("%s: %s\n", k, v))
+  end
+
+  gl.glPushMatrix()
+  gl.glTranslated(self.transform.pos.x+10, self.transform.pos.y+8, 0)
+  graphics.draw_text(game.resources.font, table.concat(lines))
+  gl.glPopMatrix()
 end
 
 game.collision.add_collider(self, 'character', function (other, correction)
