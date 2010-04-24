@@ -22,9 +22,12 @@ function update()
   local direction =
     game.camera.transform_controls(game.controls.get_direction(player))
 
-  local speed_multiplier =
-    1 + math.sqrt(attributes.speed) * game.c.character_speed_offset
-  local speed = game.c.character_base_speed * speed_multiplier
+  local sign = attributes.speed >= 0 and 1 or -1
+  local speed_multiplier = 1 + sign * math.sqrt(sign * attributes.speed)
+                               * game.c.character_speed_offset
+
+  local speed = math.max(game.c.character_min_speed,
+                         game.c.character_base_speed * speed_multiplier)
   local vel = direction * speed
   self.transform.pos = self.transform.pos + vel
 
