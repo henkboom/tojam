@@ -9,7 +9,8 @@ local COLUMN_SPACING = 7
 local LINE_SPACING = 4
 local LINE_HEIGHT = 7
 
-local voting = false
+local PHASES = { none = 'none', choosing_rule = 'choosing_rule', voting = 'voting' }
+local current_phase = PHASES.none
 
 local categories = {
 	game.c.condition_qualifiers,
@@ -19,19 +20,21 @@ local categories = {
 }
 local current_category
 local current_choices = { 1, 1, 1, 1 }
-local voting_player = 1
+local proposing_player = 0
 
 local first_update
 function start()
-  print('started voting')
-  voting = true
+  print('started choosing a new rule')
+  current_phase = PHASES.choosing_rule
 	
 	-- reset current category
 	current_category = 1
 	
-	-- change the electing player
-	-- voting_player = voting_player + 1
-	-- if voting_player > NUM_PLAYER then voting_player = 1 end
+	-- change the proposing player
+	-- proposing_player = proposing_player + 1
+	-- if proposing_player > 4 then proposing_player = 1 end
+	-- for now just one player
+	proposing_player = 1
 	
 	first_update = true -- eeh
 end
@@ -43,33 +46,35 @@ game.actors.new_generic('voting_component', function ()
 	end
 
 	local last_direction = v2.zero
-  function update()
-    if not voting then return end
-		
-		if game.controls.action_pressed(1) then
-			voting = false
-			game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
-			game.action.resume()
-			return
-		end
-		
+  function update()			
+		if current_phase == PHASES.none then return end
+	
 		-- hacky differential state stuff
-		local direction = game.controls.get_direction(1)
+		local direction = game.controls.get_direction(proposing_player)
 		local delta_direction = direction - last_direction
 		last_direction = direction
 		delta_direction.x = sign(delta_direction.x) * (direction.x == 0 and 0 or 1)
 		delta_direction.y = sign(delta_direction.y) * (direction.y == 0 and 0 or 1)
 		
-		if not first_update then
-			current_category = current_category + delta_direction.x
-			if current_category == 0 then current_category = 4 end
-			if current_category == table.getn(categories)+1 then current_category = 1 end
-			
-			current_choices[current_category] = current_choices[current_category] - delta_direction.y
-			if current_choices[current_category] == 0 then current_choices[current_category] = table.getn(categories[current_category]) end
-			if current_choices[current_category] == table.getn(categories[current_category])+1 then current_choices[current_category] = 1 end
-		else
-			first_update = false
+		if current_phase == PHASES.choosing_rule then
+			if game.controls.action_pressed(proposing_player) then
+				current_phase = PHASES.none -- actually should change to voting
+				game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
+				game.action.resume()
+				return
+			end
+		
+			if not first_update then
+				current_category = current_category + delta_direction.x
+				if current_category == 0 then current_category = 4 end
+				if current_category == table.getn(categories)+1 then current_category = 1 end
+				
+				current_choices[current_category] = current_choices[current_category] - delta_direction.y
+				if current_choices[current_category] == 0 then current_choices[current_category] = table.getn(categories[current_category]) end
+				if current_choices[current_category] == table.getn(categories[current_category])+1 then current_choices[current_category] = 1 end
+			else
+				first_update = false
+			end
 		end
   end
 	
@@ -160,19 +165,21 @@ game.actors.new_generic('voting_component', function ()
 	end
   
   function draw()
-		if not voting then return end
-		
-		gl.glPushMatrix()
-		gl.glTranslated(2, game.opengl_2d.height - 40, 0)
-		gl.glScaled(4, 4, 4)
-		draw_line('player voting...')
-		draw_line('')
-		for i = 1,4 do
-			draw_choice(i)
+		if current_phase == PHASES.none then return end
+	
+		if current_phase == PHASES.choosing_rule then
+			gl.glPushMatrix()
+			gl.glTranslated(2, game.opengl_2d.height - 40, 0)
+			gl.glScaled(4, 4, 4)
+			draw_line('player voting...')
+			draw_line('')
+			for i = 1,4 do
+				draw_choice(i)
+			end
+			gl.glPopMatrix()
+			
+			draw_existing_rules()
 		end
-		gl.glPopMatrix()
-		
-		draw_existing_rules()
   end
 
 end)
