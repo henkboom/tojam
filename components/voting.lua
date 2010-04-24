@@ -48,6 +48,7 @@ game.actors.new_generic('voting_component', function ()
 		
 		if game.controls.action_pressed(1) then
 			voting = false
+			game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
 			game.action.resume()
 			return
 		end
