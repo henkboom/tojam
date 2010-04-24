@@ -29,7 +29,8 @@ keys = {
 }
 
 -- rule categories
-condition_types = {"step", "teacup", "damage", "point"}
 condition_qualifiers = {"each", "most", "least"}
-consequence_types = {"teacup", "damage", "point"}
+condition_types = {"step", "teacup", "damage", "point"}
+condition_types_plural = {step = "steps", teacup = "teacups", damage = "damage", point = "points"}
 consequence_qualifiers = {"add", "remove"}
+consequence_types = {"teacup", "damage", "point"}

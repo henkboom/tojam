@@ -73,18 +73,19 @@ game.actors.new_generic('voting_component', function ()
 		end
   end
 	
-	local function draw_rule(rule)		
-		draw_line(string.format('%s %s %s %s',
-			rule.condition_qualifier, rule.condition_type, rule.consequence_qualifier, rule.consequence_type))		
-	end
-	
 	local function draw_line(text)
 		graphics.draw_text(game.resources.font, text)	
 		gl.glTranslated(0, -10, 0)
   end	
 	
-	local function add_plural(text)
-		return text
+	local function add_plural(word, qualifier)
+		if qualifier ~= 'each' then return game.c.condition_types_plural[word] end
+		return word
+	end	
+	
+	local function draw_rule(rule)		
+		draw_line(string.format('%s %s %s %s',
+			rule.condition_qualifier, add_plural(rule.condition_type, rule.condition_qualifier), rule.consequence_qualifier, rule.consequence_type))		
 	end
 	
   local function draw_choice(category)
@@ -97,8 +98,9 @@ game.actors.new_generic('voting_component', function ()
 		
 		-- evaluate size of column
 		local max_width = 0
-		for index, choice in ipairs(choices) do
-			max_width = math.max(max_width, game.resources.font_string_width(add_plural(choice)))
+		for _, choice in ipairs(choices) do
+			choice = category == 2 and add_plural(choice, categories[1][current_choices[1]]) or choice
+			max_width = math.max(max_width, game.resources.font_string_width(choice))
 		end
 		local total_height = table.getn(choices) * (8 + LINE_SPACING) -- where 10 is graphics.font_map_line_height(game.resources.font)
 		
@@ -118,7 +120,7 @@ game.actors.new_generic('voting_component', function ()
 			local choice_count = table.getn(choices)
 			for i = 0, choice_count-1 do
 				local index = ((i + (current_choice-1)) % (choice_count)) + 1
-				local choice = add_plural(choices[index])
+				local choice = category == 2 and add_plural(choices[index], categories[1][current_choices[1]]) or choices[index]
 			
 				gl.glTranslated(0, -LINE_SPACING / 2, 0)
 				if i == 0 then
@@ -137,7 +139,8 @@ game.actors.new_generic('voting_component', function ()
 			end
 		else
 			gl.glTranslated(0, -LINE_SPACING / 2, 0)
-			graphics.draw_text(game.resources.font, add_plural(choices[current_choice]))
+			local choice = category == 2 and add_plural(choices[current_choice], categories[1][current_choices[1]]) or choices[current_choice]
+			graphics.draw_text(game.resources.font, choice)
 		end
 		
 		gl.glPopMatrix()
@@ -150,8 +153,7 @@ game.actors.new_generic('voting_component', function ()
 		gl.glTranslated(2, (math.max(table.getn(game.rules.rules),1)+1) * 10, 0)
 		draw_line('existing rules :')
 		for _, rule in ipairs(game.rules.rules) do
-			draw_line(string.format('%s %s %s %s',
-				rule.condition_qualifier, rule.condition_type, rule.consequence_qualifier, rule.consequence_type))
+			draw_rule(rule)
 		end
 		if table.getn(game.rules.rules) == 0 then draw_line('(none)') end
 		gl.glPopMatrix()
