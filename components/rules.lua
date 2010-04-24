@@ -3,8 +3,7 @@ condition_qualifier = {"each", "most", "least"}
 consequence_type = {"steps", "cups", "damage", "victory"}
 consequence_qualifier = {"add", "remove"}
 
-round_rules = {}
-event_rules = {}
+rules = {}
 
 local functions = {}
 
@@ -54,22 +53,20 @@ function add_rule(type1, qual1, type2, qual2)
   rule.condition_qualifier = qual1
   rule.consequence_type = type2
   rule.consequence_qualifier = qual2
-  if qual1 == "each" then
-    event_rules[#event_rules+1] = rule
-  else
-    round_rules[#round_rules+1] = rule
-  end
+  rules[#rules+1] = rule
 end
 
 function register_event(player, type)
   for _, rule in ipairs(event_rules) do
-    if rule.condition_type == type then
+    if rule.condition_qualifier == "each" and rule.condition_type == type then
       functions[rule.consequence_qualifier]({player}, rule.consequence_type)
     end
   end
 end
 
 function fire_round_rule(players, rule)
-  local targets = functions[rule.condition_qualitifier](players, rule.condition_type)
-  functions[rule.consequence_qualifier](targets, rule.consequence_type)
+  if rule.condition_qualifier ~= "each" then
+    local targets = functions[rule.condition_qualitifier](players, rule.condition_type)
+    functions[rule.consequence_qualifier](targets, rule.consequence_type)
+  end
 end
