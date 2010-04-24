@@ -1,7 +1,7 @@
 -- constants, accessed as game.c.___
 
 -- game flow
-action_duration = 60 * 5
+action_duration = 60 * 20
 
 -- level settings
 
