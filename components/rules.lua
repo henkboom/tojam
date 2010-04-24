@@ -30,13 +30,13 @@ qualifier_functions.each = function(players, type)
   return players
 end
   
-qualifier_functions.add = function(targets, type, quantity)
+qualifier_functions.adds = function(targets, type, quantity)
     for _, target in ipairs(targets) do
       target.character.attributes[type] = target.character.attributes[type] + quantity
     end
   end
   
-qualifier_functions.remove = function(targets, type, quantity)
+qualifier_functions.removes = function(targets, type, quantity)
     for _, target in ipairs(targets) do
       target.character.attributes[type] = target.character.attributes[type] - quantity
     end

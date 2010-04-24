@@ -6,7 +6,7 @@ local v2 = require 'dokidoki.v2'
 -- controls the voting phase
 
 local BOX_MARGIN = 5
-local EXISTING_RULES_WIDTH = 230
+local EXISTING_RULES_WIDTH = 240
 local INFO_BAR_HEIGHT = 50
 
 local COLUMN_SPACING = 7
@@ -123,7 +123,7 @@ game.actors.new_generic('voting_component', function ()
 	
 	local function draw_rule(rule)		
 		draw_line(string.format('%s %s %s %s',
-			rule.condition_qualifier, add_plural(rule.condition_type, rule.condition_qualifier), rule.consequence_qualifier, rule.consequence_type))		
+			rule.condition_qualifier, add_plural(rule.condition_type, rule.condition_qualifier), rule.consequence_qualifier, add_plural(rule.consequence_type, rule.consequence_qualifier)))		
 	end
 	
   local function draw_choice(category)
@@ -137,7 +137,11 @@ game.actors.new_generic('voting_component', function ()
 		-- evaluate size of column
 		local max_width = 0
 		for _, choice in ipairs(choices) do
-			choice = category == 2 and add_plural(choice, categories[1][current_choices[1]]) or choice
+			if category == 2 then
+				choice = add_plural(choice, categories[1][current_choices[1]])
+			elseif category == 4 then 
+				choice = add_plural(choice, categories[3][current_choices[3]])
+			end
 			max_width = math.max(max_width, game.resources.font_string_width(choice))
 		end
 		local total_height = table.getn(choices) * (8 + LINE_SPACING) -- where 10 is graphics.font_map_line_height(game.resources.font)
@@ -158,7 +162,13 @@ game.actors.new_generic('voting_component', function ()
 			local choice_count = table.getn(choices)
 			for i = 0, choice_count-1 do
 				local index = ((i + (current_choice-1)) % (choice_count)) + 1
-				local choice = category == 2 and add_plural(choices[index], categories[1][current_choices[1]]) or choices[index]
+				
+				local choice = choices[index]
+				if category == 2 then
+					choice = add_plural(choice, categories[1][current_choices[1]])
+				elseif category == 4 then 
+					choice = add_plural(choice, categories[3][current_choices[3]])
+				end
 			
 				gl.glTranslated(0, -LINE_SPACING / 2, 0)
 				if i == 0 then
@@ -177,7 +187,12 @@ game.actors.new_generic('voting_component', function ()
 			end
 		else
 			gl.glTranslated(0, -LINE_SPACING / 2, 0)
-			local choice = category == 2 and add_plural(choices[current_choice], categories[1][current_choices[1]]) or choices[current_choice]
+			local choice = choices[current_choice]
+			if category == 2 then
+				choice = add_plural(choice, categories[1][current_choices[1]])
+			elseif category == 4 then 
+				choice = add_plural(choice, categories[3][current_choices[3]])
+			end			
 			graphics.draw_text(game.resources.font, choice)
 		end
 		
