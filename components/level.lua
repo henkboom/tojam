@@ -17,6 +17,23 @@ local function get_height(i, j)
 end
 
 game.actors.new_generic('level_component', function ()
+  function collision_check()
+    for _, a in ipairs(game.actors.get('collides_with_level')) do
+      local mini = math.floor(a.transform.pos.x) + 1
+      local maxi = math.floor(a.transform.pos.x+16) + 1
+      local minj = math.floor(a.transform.pos.y) + 1
+      local maxj = math.floor(a.transform.pos.y+16) + 1
+
+      local height = math.max(
+        get_height(mini, minj) or 0,
+        get_height(maxi, minj) or 0,
+        get_height(mini, maxj) or 0,
+        get_height(maxi, maxj) or 0)
+
+      a.transform.height = math.max(a.transform.height, height + 8)
+    end
+  end
+
   function draw()
     -- tops
     gl.glColor3d(1, 1, 1)
