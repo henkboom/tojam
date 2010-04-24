@@ -1,6 +1,6 @@
-condition_type = {"steps", "cups", "damage"}
+condition_type = {"steps", "teacups", "damage", "points"}
 condition_qualifier = {"each", "most", "least"}
-consequence_type = {"steps", "cups", "damage", "victory"}
+consequence_type = {"teacups", "damage", "points"}
 consequence_qualifier = {"add", "remove"}
 
 rules = {}
