@@ -4,7 +4,7 @@ local v2 = require 'dokidoki.v2'
 local geom = require 'geom'
 
 character = game.make_blueprint('character',
-  {'transform', height=0},
+  {'transform', height=8},
   {'billboard', image = game.resources.sprites.character},
   {'tag', tags={'action'}},
   {'collider', poly=geom.make_octagon(8)},
