@@ -5,6 +5,14 @@ consequence_qualifier = {"add", "remove"}
 
 rules = {}
 
+local events = {}
+for _, v in ipairs(condition_type) do
+  events[v] = {0, 0, 0, 0}
+end
+for _, v in ipairs(consequence_type) do
+  events[v] = events[v] or {0, 0, 0, 0}
+end
+
 local functions = {}
 
 functions.most = function(players, type)
