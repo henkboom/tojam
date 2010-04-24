@@ -7,7 +7,7 @@ local v2 = require 'dokidoki.v2'
 function make()
   return game.make_game(
     {'update_setup', 'update', 'collision_check', 'update_cleanup'},
-    {'draw_setup', 'draw', 'draw_gui', 'draw_debug'},
+    {'draw_setup', 'draw', 'draw_debug', 'draw_gui', 'draw_debug_gui'},
     function (game)
       glfw.SetWindowTitle('tojam')
       math.randomseed(os.time())

@@ -60,7 +60,11 @@ function draw_debug()
   end
 
   gl.glPushMatrix()
-  gl.glTranslated(self.transform.pos.x+10, self.transform.pos.y+8, 0)
+  game.camera.do_billboard_transform(
+    self.transform.pos.y,
+    self.transform.height,
+    self.transform.pos.x, 0)
+  gl.glTranslated(10, 8, 0)
   graphics.draw_text(game.resources.font, table.concat(lines))
   gl.glPopMatrix()
 end

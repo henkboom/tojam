@@ -15,6 +15,8 @@ end
 
 game.actors.new_generic('camera_component', function ()
   function draw()
+    gl.glEnable(gl.GL_DEPTH_TEST)
+    gl.glDepthFunc(gl.GL_LESS)
     gl.glMatrixMode(gl.GL_PROJECTION)
     gl.glLoadIdentity()
     glu.gluPerspective(45, 4/3, 1, 1000)
@@ -23,5 +25,9 @@ game.actors.new_generic('camera_component', function ()
                   0, 1, 0)
     gl.glMatrixMode(gl.GL_MODELVIEW)
     gl.glLoadIdentity()
+  end
+
+  function draw_debug()
+    gl.glDisable(gl.GL_DEPTH_TEST)
   end
 end)

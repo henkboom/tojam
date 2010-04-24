@@ -5,7 +5,7 @@ local kernel = require 'dokidoki.kernel'
 local lines = {}
 
 game.actors.new_generic('debug_component', function ()
-  function draw_debug()
+  function draw_debug_gui()
     gl.glPushMatrix()
     gl.glTranslated(2, game.gui.height - 2, 0)
     gl.glScaled(2, 2, 2)
