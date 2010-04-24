@@ -26,6 +26,7 @@ function make()
 
       game.init_component('controls')
 
+			game.init_component('rules')
       game.init_component('action')
       game.init_component('voting')
 
