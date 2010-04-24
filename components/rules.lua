@@ -33,9 +33,19 @@ functions.least = function(players, type)
   end
   
 functions.add = function(targets, type)
+    for _, target in ipairs(targets) do
+      if type == "cups" or type == "steps" or type == "damage" then
+        target[type] = target[type] + 1
+      end
+    end
   end
   
 functions.remove = function(targets, type)
+    for _, target in ipairs(targets) do
+      if type == "cups" or type == "steps" or type == "damage" then
+        target[type] = target[type] - 1
+      end
+    end
   end
 
 function add_rule(type1, qual1, type2, qual2)
