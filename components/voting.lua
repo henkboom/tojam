@@ -6,7 +6,7 @@ local v2 = require 'dokidoki.v2'
 -- controls the voting phase
 
 local BOX_MARGIN = 5
-local EXISTING_RULES_WIDTH = 230
+local EXISTING_RULES_WIDTH = 240
 local INFO_BAR_HEIGHT = 50
 
 local COLUMN_SPACING = 7
@@ -14,7 +14,11 @@ local LINE_SPACING = 4
 local LINE_HEIGHT = 7
 
 local PHASES = { 
-	none = 'none', election_start = 'election_start', choosing_rule = 'choosing_rule', voting = 'voting', election_results = 'election_results' 
+	none = 'none', 
+	election_start = 'election_start', 
+	choosing_rule = 'choosing_rule', 
+	voting = 'voting', 
+	election_results = 'election_results' 
 }
 local current_phase = PHASES.none
 
@@ -40,9 +44,9 @@ function start()
 	current_category = 1
 	
 	-- change the proposing player
-	--proposing_player = proposing_player + 1
-	--if proposing_player > 4 then proposing_player = 1 end
-	proposing_player = 1
+	proposing_player = proposing_player + 1
+	if proposing_player > 2 then proposing_player = 1 end
+	-- proposing_player = 1
 	
 	seconds_to_vote = 5
 	current_votes = { false, false, false, false }
@@ -56,17 +60,18 @@ game.actors.new_generic('voting_component', function ()
 
   function update()			
 		if current_phase == PHASES.none then return end
-	
-		local up = game.controls.button_pressed(proposing_player, 'up')
-		local down = game.controls.button_pressed(proposing_player, 'down')				
-		local left = game.controls.button_pressed(proposing_player, 'left')
-		local right = game.controls.button_pressed(proposing_player, 'right')
 		
 		if current_phase == PHASES.choosing_rule then
 			if game.controls.button_pressed(proposing_player, 'action') then
 				current_phase = PHASES.voting
+				current_votes[proposing_player] = false
 				return
 			end
+				
+			local up = game.controls.button_pressed(proposing_player, 'up')
+			local down = game.controls.button_pressed(proposing_player, 'down')				
+			local left = game.controls.button_pressed(proposing_player, 'left')
+			local right = game.controls.button_pressed(proposing_player, 'right')
 		
 			current_category = current_category + (left and -1 or 0) + (right and 1 or 0)
 			if current_category == 0 then current_category = 4 end
@@ -80,12 +85,29 @@ game.actors.new_generic('voting_component', function ()
 		if current_phase == PHASES.voting then
 			if seconds_to_vote <= 0 then
 				current_phase = PHASES.election_results
-				-- TODO : take majority of votes and elect rule if > 50%
-				game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
-				rule_passed = true
+				local count_yays = 0
+				for i = 1,2 do count_yays = count_yays + (current_votes[i] and 1 or 0) end
+				if count_yays == 1 then
+					game.rules.add_rule(current_choices[1], current_choices[2], current_choices[3], current_choices[4])
+					rule_passed = true
+				else
+					rule_passed = false
+				end
 				return
 			else
 				seconds_to_vote = seconds_to_vote - 1/60
+			end
+			
+			-- do the selection stuff for voting players
+			for i = 1,2 do
+				if i ~= proposing_player then
+					local up = game.controls.button_pressed(i, 'up')
+					local down = game.controls.button_pressed(i, 'down')				
+					
+					if up then current_votes[i] = false
+					elseif down then current_votes[i] = true
+					end
+				end
 			end
 		end
 		
@@ -123,7 +145,7 @@ game.actors.new_generic('voting_component', function ()
 	
 	local function draw_rule(rule)		
 		draw_line(string.format('%s %s %s %s',
-			rule.condition_qualifier, add_plural(rule.condition_type, rule.condition_qualifier), rule.consequence_qualifier, rule.consequence_type))		
+			rule.condition_qualifier, add_plural(rule.condition_type, rule.condition_qualifier), rule.consequence_qualifier, add_plural(rule.consequence_type, rule.consequence_qualifier)))		
 	end
 	
   local function draw_choice(category)
@@ -137,7 +159,11 @@ game.actors.new_generic('voting_component', function ()
 		-- evaluate size of column
 		local max_width = 0
 		for _, choice in ipairs(choices) do
-			choice = category == 2 and add_plural(choice, categories[1][current_choices[1]]) or choice
+			if category == 2 then
+				choice = add_plural(choice, categories[1][current_choices[1]])
+			elseif category == 4 then 
+				choice = add_plural(choice, categories[3][current_choices[3]])
+			end
 			max_width = math.max(max_width, game.resources.font_string_width(choice))
 		end
 		local total_height = table.getn(choices) * (8 + LINE_SPACING) -- where 10 is graphics.font_map_line_height(game.resources.font)
@@ -158,7 +184,13 @@ game.actors.new_generic('voting_component', function ()
 			local choice_count = table.getn(choices)
 			for i = 0, choice_count-1 do
 				local index = ((i + (current_choice-1)) % (choice_count)) + 1
-				local choice = category == 2 and add_plural(choices[index], categories[1][current_choices[1]]) or choices[index]
+				
+				local choice = choices[index]
+				if category == 2 then
+					choice = add_plural(choice, categories[1][current_choices[1]])
+				elseif category == 4 then 
+					choice = add_plural(choice, categories[3][current_choices[3]])
+				end
 			
 				gl.glTranslated(0, -LINE_SPACING / 2, 0)
 				if i == 0 then
@@ -177,7 +209,12 @@ game.actors.new_generic('voting_component', function ()
 			end
 		else
 			gl.glTranslated(0, -LINE_SPACING / 2, 0)
-			local choice = category == 2 and add_plural(choices[current_choice], categories[1][current_choices[1]]) or choices[current_choice]
+			local choice = choices[current_choice]
+			if category == 2 then
+				choice = add_plural(choice, categories[1][current_choices[1]])
+			elseif category == 4 then 
+				choice = add_plural(choice, categories[3][current_choices[3]])
+			end			
 			graphics.draw_text(game.resources.font, choice)
 		end
 		
@@ -208,12 +245,34 @@ game.actors.new_generic('voting_component', function ()
 		gl.glEnd()
 	end
 	
+	local function draw_voting_choice(player)
+		if current_votes[player] == false then
+			gl.glPushMatrix()
+				gl.glScaled(game.resources.font_string_width('no'), 10, 1)
+				draw_quad()
+			gl.glPopMatrix()
+			gl.glColor3d(0, 0, 0)
+		end
+		draw_line('no')
+		gl.glColor3d(1, 1, 1)
+		
+		if current_votes[player] == true then
+			gl.glPushMatrix()
+				gl.glScaled(game.resources.font_string_width('yes'), 10, 1)
+				draw_quad()
+			gl.glPopMatrix()
+			gl.glColor3d(0, 0, 0)
+		end			
+		draw_line('yes')
+		gl.glColor3d(1, 1, 1)
+	end
+	
 	local function draw_voting_player(player)
 		gl.glScaled(2, 2, 1)
 		local title = ''
 		if current_phase == PHASES.voting then
-			draw_line('player '.. player .. ' has yet to vote!')
-			draw_line('yes / no')
+			draw_line('player '.. player .. ' is voting!')
+			draw_voting_choice(player)
 		elseif current_phase == PHASES.election_start then			
 			draw_line('player '.. player .. ' votes!')
 		elseif current_phase == PHASES.choosing_rule then

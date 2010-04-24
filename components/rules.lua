@@ -30,13 +30,13 @@ qualifier_functions.each = function(players, type)
   return players
 end
   
-qualifier_functions.add = function(targets, type, quantity)
+qualifier_functions.adds = function(targets, type, quantity)
     for _, target in ipairs(targets) do
       target.character.attributes[type] = target.character.attributes[type] + quantity
     end
   end
   
-qualifier_functions.remove = function(targets, type, quantity)
+qualifier_functions.removes = function(targets, type, quantity)
     for _, target in ipairs(targets) do
       target.character.attributes[type] = target.character.attributes[type] - quantity
     end
@@ -75,4 +75,14 @@ function fire_rule(players, rule)
   local targets = qualifier_functions[rule.condition_qualifier](players, rule.condition_type)
   qualifier_functions[rule.consequence_qualifier](targets,
     rule.consequence_type, game.c.consequence_quantities[rule.condition_qualifier])
+end
+
+function check_victory()
+  local players = game.actors.get("character")
+  for _, player in ipairs(players) do
+    if player.character.attributes["point"] >= 100 then
+      print("VICTORY!")
+      os.exit()
+    end
+  end
 end

@@ -35,6 +35,7 @@ function update()
   step_progress = step_progress + v2.mag(vel)
   while step_progress >= game.c.character_step_distance do
     step_progress = step_progress - game.c.character_step_distance
+    attributes.step = attributes.step + 1
     game.rules.register_event(self, 'step')
   end
 
@@ -49,7 +50,7 @@ function update()
     local offset = character_facing * 8
     game.actors.new(game.blueprints.attack_hitbox,
       {'transform', pos=self.transform.pos + offset},
-      {'attack_hitbox', player=player, offset=offset})
+      {'attack_hitbox', source=self, offset=offset})
   end
 end
 
@@ -74,9 +75,14 @@ game.collision.add_collider(self, 'character', function (other, correction)
   other.transform.pos = other.transform.pos - correction/2
 end)
 
+game.collision.add_collider(self, 'enemy', function (other, correction)
+  self.transform.pos = self.transform.pos + correction/2
+  other.transform.pos = other.transform.pos - correction/2
+end)
+
 game.collision.add_collider(self, 'attack_hitbox', function (other, correction)
-  if player ~= other.attack_hitbox.player then
-    self.transform.pos = self.transform.pos + correction * 2
+  if self ~= other.attack_hitbox.source then
+    self.transform.pos = self.transform.pos + correction
     attributes["damage"] = attributes["damage"] + 1
     game.rules.register_event(self, "damage")
     other.attack_hitbox.hit = true
