@@ -3,19 +3,19 @@ rules = {}
 local functions = {}
 
 functions.most = function(players, type)
-    local most_count = -999999
+    local most_count = -math.huge
     local most_player
-    for _, v in ipairs(players) do
-      if v[type] > most_count then
-        most_count = v[type]
-        most_player = v
+    for _, player in ipairs(players) do
+      if player.character.attributes[type] > most_count then
+        most_count = player.character.attributes[type]
+        most_player = player
       end
     end
     return { most_player }
   end
   
 functions.least = function(players, type)
-    local least_count = 999999
+    local least_count = math.huge
     local least_player
     for _, player in ipairs(players) do
       if player.character.attributes[type] < least_count then
