@@ -19,7 +19,6 @@ function update()
   -- movement
   local direction = game.controls.get_direction(player)
 
-  print(attributes.speed)
   local speed_multiplier =
     1 + math.sqrt(attributes.speed) * game.c.character_speed_offset
   local speed = game.c.character_base_speed * speed_multiplier
