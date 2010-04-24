@@ -84,7 +84,7 @@ game.actors.new_generic('voting_component', function ()
   end	
 	
 	local function add_plural(word, qualifier)
-		if qualifier ~= 'each' then return game.c.condition_types_plural[word] end
+		if qualifier ~= 'each' then return game.c.types_plural[word] end
 		return word
 	end	
 	
