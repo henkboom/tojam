@@ -7,7 +7,7 @@ local v2 = require 'dokidoki.v2'
 
 local BOX_MARGIN = 5
 local EXISTING_RULES_WIDTH = 230
-local INFO_BAR_HEIGHT = 30
+local INFO_BAR_HEIGHT = 50
 
 local COLUMN_SPACING = 7
 local LINE_SPACING = 4
@@ -210,22 +210,32 @@ game.actors.new_generic('voting_component', function ()
 	
 	local function draw_voting_player(player)
 		gl.glScaled(2, 2, 1)
-		draw_line('player '.. player .. ' votes!')
+		local title = ''
 		if current_phase == PHASES.voting then
+			draw_line('player '.. player .. ' has yet to vote!')
 			draw_line('yes / no')
+		elseif current_phase == PHASES.election_start then			
+			draw_line('player '.. player .. ' votes!')
 		elseif current_phase == PHASES.choosing_rule then
-			draw_line('wait for the rule...')		
+			draw_line('player '.. player .. ' votes!')
+			draw_line('(wait for the proposal...)')		
+		elseif current_phase == PHASES.election_results then
+			draw_line('player '.. player .. ' has voted!')
 		end
 	end	
 	
 	local function draw_proposing_player()
 		gl.glScaled(2, 2, 1)
-		if current_phase == PHASES.choosing_rule then
+		
+		if (current_phase == PHASES.election_start) or (current_phase == PHASES.choosing_rule) then
 			draw_line('player '.. proposing_player .. ' proposes the rule!')
+		end
+		
+		if current_phase == PHASES.choosing_rule then
 			for i = 1,4 do
 				draw_choice(i)
 			end			
-		else
+		elseif (current_phase == PHASES.voting) or (current_phase == PHASES.election_results) then
 			-- fake rule so I can print it... ^_^
 			local rule = {}
 			rule.condition_qualifier = game.c.condition_qualifiers[current_choices[1]]
@@ -234,6 +244,10 @@ game.actors.new_generic('voting_component', function ()
 			rule.consequence_type = game.c.consequence_types[current_choices[4]]			
 			draw_line('player '.. proposing_player .. ' has chosen this rule :')
 			draw_rule(rule)
+		end
+		
+		if current_phases == PHASES.election_results then
+			draw_line('player ' .. proposing_player .. (rule_passed and  ' passed the rule!' or ' failed to pass the rule.'))
 		end
 	end
   
@@ -306,8 +320,8 @@ game.actors.new_generic('voting_component', function ()
 		
 		-- draw the infobar content
 		gl.glPushMatrix()
-			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN * 2 + (safe_width + BOX_MARGIN) / 2, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN * 2.75, 0)
-			gl.glScaled(2, 2, 1)
+			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN * 2 + (safe_width + BOX_MARGIN) / 2, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN * 3.75, 0)
+			gl.glScaled(3, 3, 1)
 			
 			local text = ''
 			if current_phase == PHASES.election_start then text = 'election time again, gentlemen!'
