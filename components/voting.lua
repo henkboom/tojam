@@ -139,7 +139,7 @@ game.actors.new_generic('voting_component', function ()
 		
 		gl.glPushMatrix()
 		gl.glTranslated(2, game.opengl_2d.height - 40, 0)
-		gl.glScaled(2, 2, 2)
+		gl.glScaled(6, 6, 6)
 		draw_line('player voting...')
 		draw_line('')
 		for i = 1,4 do
