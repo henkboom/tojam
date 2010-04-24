@@ -1,7 +1,13 @@
 local graphics = require 'dokidoki.graphics'
+local mixer = require 'mixer'
 
 sprites = {
   character = graphics.sprite_from_image('sprites/character.png', nil, 'center')
+}
+
+sfx = {
+  damage = mixer.load_wav('audio/damage.wav'),
+  miss = mixer.load_wav('audio/miss.wav')
 }
 
 font = require('dokidoki.default_font').load()
