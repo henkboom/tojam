@@ -16,10 +16,20 @@ function update()
   -- attack
   if game.controls.action_pressed(player) then
     print('attack', character_facing)
+    local offset = character_facing * 8
+    game.actors.new(game.blueprints.attack_hitbox,
+      {'transform', pos=self.transform.pos + offset},
+      {'attack_hitbox', player=player, offset=offset})
   end
 end
 
 game.collision.add_collider(self, 'character', function (other, correction)
   self.transform.pos = self.transform.pos + correction/2
   other.transform.pos = other.transform.pos - correction/2
+end)
+
+game.collision.add_collider(self, 'attack_hitbox', function (other, correction)
+  if player ~= other.attack_hitbox.player then
+    self.transform.pos = self.transform.pos + correction * 2
+  end
 end)
