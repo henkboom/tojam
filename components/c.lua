@@ -2,12 +2,13 @@
 
 debug_line_count = 5
 
-action_duration = 60 * 1
+action_duration = 60 * 5
 
 -- character settings
 
-character_speed = 2
-character_step_distance = 16
+character_base_speed = 2
+character_speed_offset = 0.1
+character_step_distance = 32
 
 -- controls for the four players
 keys = {
@@ -32,5 +33,5 @@ keys = {
 -- rule categories
 condition_types = {"step", "teacup", "damage", "point"}
 condition_qualifiers = {"each", "most", "least"}
-consequence_types = {"teacup", "damage", "point"}
+consequence_types = {"teacup", "damage", "point", "speed"}
 consequence_qualifiers = {"add", "remove"}

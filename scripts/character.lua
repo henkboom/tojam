@@ -3,20 +3,36 @@ local v2 = require 'dokidoki.v2'
 assert(player, 'missing player argument')
 
 local character_facing = v2(1, 0)
+-- distance travelled since last step
+local step_progress = 0
 
+-- initialize tracked attributes
 local attributes = {}
 for _, v in ipairs(game.c.condition_types) do
-  attributes[v] = {0, 0, 0, 0}
+  attributes[v] = 0
 end
 for _, v in ipairs(game.c.consequence_types) do
-  attributes[v] = attributes[v] or {0, 0, 0, 0}
+  attributes[v] = 0
 end
 
 function update()
   -- movement
   local direction = game.controls.get_direction(player)
-  self.transform.pos = self.transform.pos + direction * game.c.character_speed
 
+  local speed_multiplier = 1 + attributes.speed * game.c.character_speed_offset
+  local speed = game.c.character_base_speed * speed_multiplier
+  local vel = direction * speed
+  self.transform.pos = self.transform.pos + vel
+
+  -- step tracking
+  step_progress = step_progress + v2.mag(vel)
+  while step_progress >= game.c.character_step_distance do
+    step_progress = step_progress - game.c.character_step_distance
+    print("step!")
+    --game.rules.register_event(self, 'step')
+  end
+
+  -- orientation
   if direction ~= v2.zero then
     character_facing = direction
   end
