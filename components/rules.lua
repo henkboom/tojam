@@ -26,6 +26,10 @@ functions.least = function(players, type)
     return { least_player }
   end
   
+functions.each = function(players, type)
+  return players
+end
+  
 functions.add = function(targets, type)
     for _, target in ipairs(targets) do
       if type == "cups" or type == "steps" or type == "damage" then
@@ -52,16 +56,14 @@ function add_rule(qual1, type1, qual2, type2)
 end
 
 function register_event(player, type)
-  for _, rule in ipairs(event_rules) do
+  for _, rule in ipairs(rules) do
     if rule.condition_qualifier == "each" and rule.condition_type == type then
-      functions[rule.consequence_qualifier]({player}, rule.consequence_type)
+      fire_rule({player}, rule)
     end
   end
 end
 
-function fire_round_rule(players, rule)
-  if rule.condition_qualifier ~= "each" then
-    local targets = functions[rule.condition_qualitifier](players, rule.condition_type)
-    functions[rule.consequence_qualifier](targets, rule.consequence_type)
-  end
+function fire_rule(players, rule)
+  local targets = functions[rule.condition_qualitifier](players, rule.condition_type)
+  functions[rule.consequence_qualifier](targets, rule.consequence_type)
 end
