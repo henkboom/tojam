@@ -3,10 +3,10 @@ local v2 = require 'dokidoki.v2'
 function get_direction(player)
   local keys = game.c.keys[player]
 
-  local left = game.keyboard.key_held(keys.left)
-  local right = game.keyboard.key_held(keys.right)
-  local down = game.keyboard.key_held(keys.down)
-  local up = game.keyboard.key_held(keys.up)
+  local left = button_held(player, 'left')
+  local right = button_held(player, 'right')
+  local down = button_held(player, 'down')
+  local up = button_held(player, 'up')
 
   local direction = v2((right and 1 or 0) - (left and 1 or 0),
                        (up and 1 or 0)    - (down and 1 or 0))
@@ -17,19 +17,11 @@ function get_direction(player)
   return direction
 end
 
-function action_pressed(player)
-  return game.keyboard.key_pressed(game.c.keys[player].action)
+function button_held(player, type)
+  return game.keyboard.key_held(game.c.keys[player][type])
 end
 
-function action_held(player)
-  return game.keyboard.key_held(game.c.keys[player].action)
-end
-
-function jump_pressed(player)
-  return game.keyboard.key_pressed(game.c.keys[player].jump)
-end
-
-function jump_held(player)
-  return game.keyboard.key_held(game.c.keys[player].jump)
+function button_pressed(player, type)
+  return game.keyboard.key_pressed(game.c.keys[player][type])
 end
 

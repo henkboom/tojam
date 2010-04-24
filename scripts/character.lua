@@ -31,7 +31,6 @@ function update()
   step_progress = step_progress + v2.mag(vel)
   while step_progress >= game.c.character_step_distance do
     step_progress = step_progress - game.c.character_step_distance
-    print("step!")
     game.rules.register_event(self, 'step')
   end
 
@@ -41,7 +40,7 @@ function update()
   end
 
   -- attack
-  if game.controls.action_pressed(player) then
+  if game.controls.button_pressed(player, 'action') then
     print('attack', character_facing)
     local offset = character_facing * 8
     game.actors.new(game.blueprints.attack_hitbox,
