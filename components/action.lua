@@ -1,6 +1,9 @@
 -- action.lua
 -- controls the action gameplay. pauses during voting.
 
+local graphics = require 'dokidoki.graphics'
+local gl = require 'gl'
+
 local time = 0
 local paused = true
 
@@ -35,8 +38,17 @@ game.actors.new_generic('action_component', function ()
         print('pausing action')
         pause_all()
         game.rules.end_round()
+        game.rules.check_victory()
         game.voting.start()
       end
     end
+  end
+  function draw_gui()
+    gl.glPushMatrix()
+    gl.glTranslated(750, 40.0, 0)
+    gl.glScaled(5, 5, 0)
+    graphics.draw_text(game.resources.font,
+      tostring(math.ceil((game.c.action_duration - time) / 60)))
+    gl.glPopMatrix()
   end
 end)

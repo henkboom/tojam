@@ -76,3 +76,13 @@ function fire_rule(players, rule)
   qualifier_functions[rule.consequence_qualifier](targets,
     rule.consequence_type, game.c.consequence_quantities[rule.condition_qualifier])
 end
+
+function check_victory()
+  local players = game.actors.get("character")
+  for _, player in ipairs(players) do
+    if player.character.attributes["point"] >= 100 then
+      print("VICTORY!")
+      os.exit()
+    end
+  end
+end
