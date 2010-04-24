@@ -27,3 +27,9 @@ keys = {
     action = string.byte('H')
   },
 }
+
+-- rule categories
+condition_types = {"step", "teacup", "damage", "point"}
+condition_qualifiers = {"each", "most", "least"}
+consequence_types = {"teacup", "damage", "point"}
+consequence_qualifiers = {"add", "remove"}

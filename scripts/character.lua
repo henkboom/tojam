@@ -4,6 +4,14 @@ assert(player, 'missing player argument')
 
 local character_facing = v2(1, 0)
 
+local attributes = {}
+for _, v in ipairs(game.c.condition_types) do
+  attributes[v] = {0, 0, 0, 0}
+end
+for _, v in ipairs(game.c.consequence_types) do
+  attributes[v] = attributes[v] or {0, 0, 0, 0}
+end
+
 function update()
   -- movement
   local direction = game.controls.get_direction(player)

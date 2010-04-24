@@ -1,8 +1,3 @@
-condition_type = {"step", "teacup", "damage", "point"}
-condition_qualifier = {"each", "most", "least"}
-consequence_type = {"teacup", "damage", "point"}
-consequence_qualifier = {"add", "remove"}
-
 rules = {}
 
 local functions = {}
@@ -49,10 +44,10 @@ functions.remove = function(targets, type)
 
 function add_rule(type1, qual1, type2, qual2)
   local rule = {}
-  rule.condition_type = condition_type[type1]
-  rule.condition_qualifier = condition_qualifier[qual1]
-  rule.consequence_type = consequence_type[type2]
-  rule.consequence_qualifier = consequence_qualifier[qual2]
+  rule.condition_type = condition_types[type1]
+  rule.condition_qualifier = condition_qualifiers[qual1]
+  rule.consequence_type = consequence_types[type2]
+  rule.consequence_qualifier = consequence_qualifiers[qual2]
   rules[#rules+1] = rule
 end
 
