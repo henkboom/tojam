@@ -14,7 +14,11 @@ local LINE_SPACING = 4
 local LINE_HEIGHT = 7
 
 local PHASES = { 
-	none = 'none', election_start = 'election_start', choosing_rule = 'choosing_rule', voting = 'voting', election_results = 'election_results' 
+	none = 'none', 
+	election_start = 'election_start', 
+	choosing_rule = 'choosing_rule', 
+	voting = 'voting', 
+	election_results = 'election_results' 
 }
 local current_phase = PHASES.none
 
@@ -65,6 +69,7 @@ game.actors.new_generic('voting_component', function ()
 		if current_phase == PHASES.choosing_rule then
 			if game.controls.button_pressed(proposing_player, 'action') then
 				current_phase = PHASES.voting
+				current_votes[proposing_player] = false
 				return
 			end
 		
@@ -86,6 +91,11 @@ game.actors.new_generic('voting_component', function ()
 				return
 			else
 				seconds_to_vote = seconds_to_vote - 1/60
+			end
+			
+			-- do the selection stuff for voting players
+			for i = 1,4 do
+				
 			end
 		end
 		
@@ -223,12 +233,34 @@ game.actors.new_generic('voting_component', function ()
 		gl.glEnd()
 	end
 	
+	local function draw_voting_choice(player)
+		if current_votes[player] == false then
+			gl.glPushMatrix()
+				gl.glScaled(game.resources.font_string_width('no'), 10, 1)
+				draw_quad()
+			gl.glPopMatrix()
+			gl.glColor3d(0, 0, 0)
+		end
+		draw_line('no')
+		gl.glColor3d(1, 1, 1)
+		
+		if current_votes[player] == true then
+			gl.glPushMatrix()
+				gl.glScaled(game.resources.font_string_width('yes'), 10, 1)
+				draw_quad()
+			gl.glPopMatrix()
+			gl.glColor3d(0, 0, 0)
+		end			
+		draw_line('yes')
+		gl.glColor3d(1, 1, 1)
+	end
+	
 	local function draw_voting_player(player)
 		gl.glScaled(2, 2, 1)
 		local title = ''
 		if current_phase == PHASES.voting then
 			draw_line('player '.. player .. ' has yet to vote!')
-			draw_line('yes / no')
+			draw_voting_choice(player)
 		elseif current_phase == PHASES.election_start then			
 			draw_line('player '.. player .. ' votes!')
 		elseif current_phase == PHASES.choosing_rule then
