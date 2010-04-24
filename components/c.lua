@@ -1,8 +1,12 @@
 -- constants, accessed as game.c.___
 
-debug_line_count = 5
-
+-- game flow
 action_duration = 60 * 5
+
+-- level settings
+
+level_size = 16
+level_tile_size = 16
 
 -- character settings
 

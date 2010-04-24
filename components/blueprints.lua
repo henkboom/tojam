@@ -2,8 +2,8 @@ collision = require 'dokidoki.collision'
 v2 = require 'dokidoki.v2'
 
 character = game.make_blueprint('character',
-  {'transform'},
-  {'sprite', image = game.resources.sprites.character},
+  {'transform', height=0},
+  {'billboard', image = game.resources.sprites.character},
   {'tag', tags={'action'}},
   {'collider', poly=collision.make_rectangle(16, 16)},
   {'character'})
