@@ -24,3 +24,14 @@ attack_hitbox = game.make_blueprint('attack_hitbox',
   {'tag', tags={'action'}},
   {'collider', poly=geom.make_octagon(16)},
   {'attack_hitbox'})
+
+spawner = game.make_blueprint('spawner', 
+	{'tag', tags={'action'}},
+	{'spawner'})
+
+pickup = game.make_blueprint('pickup', 
+	{'tag', tags={'action'}},
+	{'transform'},
+	{'collider', poly=geom.make_octagon(8)},
+  {'billboard', image = game.resources.sprites.pickup},
+	{'pickup'})	

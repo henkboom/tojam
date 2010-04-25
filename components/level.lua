@@ -12,7 +12,7 @@ function load(level_data)
   end
 end
 
-local function get_height(i, j)
+function get_height(i, j)
   return level[i] and level[i][j]
 end
 
