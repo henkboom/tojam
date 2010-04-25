@@ -34,7 +34,8 @@ function attack()
   self.billboard.jerk()
   local offset = attack_direction * 8
   game.actors.new(game.blueprints.attack_hitbox,
-    {'transform', pos=self.transform.pos + offset},
+    {'transform', pos=self.transform.pos + offset,
+                  height=self.transform.height},
     {'attack_hitbox', source=self, offset=offset})
 end
 

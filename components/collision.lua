@@ -38,7 +38,7 @@ game.actors.new_generic('collision', function ()
 
               -- collision check!
               local correction = collision.collide(body1, body2)
-              if correction then
+              if correction and math.abs(colliding_actor.transform.height - tagged_actor.transform.height) < 16 then
                 callback(tagged_actor, correction)
                 -- if the colliding actor died they shouldn't collide anymore
                 if colliding_actor.dead then
