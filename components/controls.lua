@@ -55,6 +55,8 @@ game.actors.new_generic('controls', function ()
 		for i, s in pairs(joystick_states[player]) do
 			old_joystick_states[player][i] = s
 		end
+		
+		if glfw.GetJoystickParam(connected[controller], glfw.PRESENT) == gl.GL_FALSE then return end
 	
 		local buttons = glfw.GetJoystickButtons(connected[controller], 3)
 		local axis = glfw.GetJoystickPos(connected[controller], 2)
