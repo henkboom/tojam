@@ -73,6 +73,7 @@ function make()
             {'player', number=4})
 			
       		game.actors.new(game.blueprints.spawner)
+					game.actors.new(game.blueprints.hud)
 
           game.action.resume()
       end

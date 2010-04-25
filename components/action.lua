@@ -5,7 +5,7 @@ local graphics = require 'dokidoki.graphics'
 local gl = require 'gl'
 
 local time = 0
-local paused = true
+paused = true
 
 -- returns all action actors which need to be paused
 local function get_action_actors()
