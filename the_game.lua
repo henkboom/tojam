@@ -43,16 +43,16 @@ function make()
       
       function tojam_splash()
           game.actors.new(game.blueprints.splash,
-            {'transform', pos=v2(0, 0), height=100, scale_x = 0.23, scale_y = 0.23},
+            {'transform', pos=v2(15, 15), height=85, scale_x = 0.23, scale_y = 0.23},
             {'billboard', image = game.resources.sprites.tojam},
-            {'splash', timer = 100, when_dead = no_fun_splash})
+            {'splash', timer = 120, when_dead = no_fun_splash})
       end
 
       function no_fun_splash()
           game.actors.new(game.blueprints.splash,
-            {'transform', pos=v2(0, 0), height=100, scale_x = 0.3, scale_y = 0.3},
+            {'transform', pos=v2(15, 15), height=85, scale_x = 0.3, scale_y = 0.3},
             {'billboard', image = game.resources.sprites.no_fun},
-            {'splash', timer = 100, when_dead = start_game})
+            {'splash', timer = 120, when_dead = start_game})
       end
 
       function start_game()
