@@ -25,8 +25,6 @@ for _, v in ipairs(game.c.consequence_types) do
   attributes[v] = 0
 end
 
-self.billboard.image = game.resources.player_sprites[number].stand
-
 function update()
   -- movement
   local direction =
@@ -68,6 +66,12 @@ function update()
   if popup_timer <= 0 and #popup_queue > 0 then
     dequeue_popup()
   end
+	
+	if self.billboard.finished_jerking() then
+		self.billboard.image = game.resources.player_sprites[number].stand
+	else
+		self.billboard.image = game.resources.player_sprites[number].attack
+	end	
 end
 
 function draw_debug()

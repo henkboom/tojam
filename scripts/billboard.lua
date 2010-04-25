@@ -33,7 +33,7 @@ function draw()
   if jerk_timer > 0 then
 		local factor = jerk_timer / 5
     gl.glTranslated(4 * factor, 0, 0)
-    gl.glRotated(-60 * factor, 0, 0, 1)
+    gl.glRotated(-30 * factor, 0, 0, 1)
     gl.glTranslated(-2 * factor, 0, 0)
   end
 
@@ -55,7 +55,11 @@ function flash(color)
 end
 
 function jerk()
-  jerk_timer = 5
+  jerk_timer = 10
+end
+
+function finished_jerking()
+	return jerk_timer == 0
 end
 
 function set_flipped(f)
