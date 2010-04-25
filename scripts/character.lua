@@ -40,7 +40,7 @@ end
 
 function jump()
   if grounded then
-    vertical_vel = 4
+    vertical_vel = 3.5
     jump_timer = 0
     game.resources.sfx["jump"]:play(1)
     game.rules.register_event(self, "jump")
@@ -65,7 +65,7 @@ function update()
     grounded = false
   end
 
-  if not jump_timer or jump_timer > 10 then
+  if not jump_timer or jump_timer > 7 then
     vertical_vel = vertical_vel - 0.3
   else
     vertical_vel = vertical_vel - 0.1
