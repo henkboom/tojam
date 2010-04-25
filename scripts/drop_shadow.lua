@@ -16,7 +16,7 @@ local function draw_for_tile(tile, fraction)
 	gl.glColor4d(0, 0, 0, 0.7)
 
 	gl.glPushMatrix()
-	gl.glTranslated(tile.y * 16, height + 0.01, tile.x * 16)
+	gl.glTranslated(tile.y * 16 - 0.05, height + 0.05, tile.x * 16 - 0.05)
 	gl.glScaled(16, 1, 16)
 	
 	gl.glMatrixMode(gl.GL_TEXTURE)
@@ -51,7 +51,7 @@ function draw()
 	local tile = pos / 16
 	
 	local iTile = v2(math.floor(tile.x), math.floor(tile.y))
-	local fraction = tile - iTile - v2(0.5, 0.5)
+	local fraction = tile - iTile - v2(0.6, 0.6)
 	
 	draw_for_tile(iTile + v2(-1, 0), v2(fraction.x + 1, fraction.y))
 	draw_for_tile(iTile + v2(1, 0), v2(fraction.x - 1, fraction.y))
