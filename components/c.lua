@@ -10,7 +10,7 @@ level_size = 16
 level_tile_size = 16
 
 -- player settings
-player_base_speed = 2
+player_base_speed = 1
 player_speed_offset = 0.2
 player_min_speed = 0.2
 player_step_distance = 48

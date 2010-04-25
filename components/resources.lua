@@ -19,6 +19,12 @@ sprites = {
 	medal = graphics.sprite_from_image('sprites/medal.png', nil, 'center')
 }
 
+for _, s in ipairs{sprites.tojam, sprites.no_fun} do
+  s.tex:enable()
+	gl.glTexParameterf(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR)
+  s.tex:disable()
+end
+
 player_sprites = {
 	{ stand = graphics.sprite_from_image('sprites/player1_stand.png', nil, 'center'),
 		attack = graphics.sprite_from_image('sprites/player1_attack.png', nil, 'center'),

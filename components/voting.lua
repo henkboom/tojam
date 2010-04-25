@@ -38,6 +38,7 @@ local rule_passed = false
 local ui_alpha = 0
 
 function start()
+  game.music.play()
   print('started choosing a new rule')
   current_phase = PHASES.election_start
 	
@@ -132,6 +133,7 @@ game.actors.new_generic('voting_component', function ()
 			if feedback_timer <= 0 then
 				current_phase = PHASES.none
 				feedback_timer = 3
+        game.music.stop()
 				game.action.resume()
 				return
 			else

@@ -1,4 +1,4 @@
-NAME=tojam
+NAME="tea-time-quarrel"
 
 PLATFORMS=linux macosx mingw
 
