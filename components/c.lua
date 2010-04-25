@@ -1,3 +1,5 @@
+local glfw = require 'glfw'
+
 -- constants, accessed as game.c.___
 
 -- game flow
@@ -30,6 +32,14 @@ keys = {
     down = string.byte('K'),
     jump = string.byte('G'),
     action = string.byte('H')
+  },
+  {
+    down = string.byte('1'),
+		action = string.byte('2')
+  },
+  {
+    down = string.byte('3'),
+		action = string.byte('4')
   },
 }
 
