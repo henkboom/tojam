@@ -14,6 +14,7 @@ local function draw_for_tile(tile, fraction)
 	local shadow_scale = math.min(math.max(0, (self.transform.height - height) / 64), 1) * 1 + 0.7
 	
 	gl.glColor4d(0, 0, 0, 0.7)
+  gl.glDepthMask(false)
 
 	gl.glPushMatrix()
 	gl.glTranslated(tile.y * 16 - 0.05, height + 0.05, tile.x * 16 - 0.05)
@@ -37,6 +38,7 @@ local function draw_for_tile(tile, fraction)
 	gl.glMatrixMode(gl.GL_MODELVIEW)
 	gl.glPopMatrix()
 	
+  gl.glDepthMask(true)
 	gl.glColor3d(1, 1, 1)
 end
 
