@@ -29,26 +29,44 @@ qualifier_functions.least = function(players, type)
 qualifier_functions.each = function(players, type)
   return players
 end
-  
+
 qualifier_functions.adds = function(targets, type, quantity)
-    for _, target in ipairs(targets) do
-      target.player.attributes[type] = target.player.attributes[type] + quantity
-      target.player.queue_popup({'popup', text = "+"..type, color = {0, 1, 0}})
-      if type == "health" then
-        target.billboard.flash({0, 1, 0})
-      end
+  local max = game.c.attr_ranges[type].max
+  for _, target in ipairs(targets) do
+    local value = target.player.attributes[type]
+
+    local text
+    if value < max then
+      target.player.attributes[type] = math.min(max, value + quantity)
+      text = '+' .. type
+    else
+      text = 'max ' .. type
+    end
+      target.player.queue_popup({'popup', text=text, color={0, 1, 0}})
+    if type == "health" then
+      target.billboard.flash({0, 1, 0})
     end
   end
+end
   
 qualifier_functions.removes = function(targets, type, quantity)
-    for _, target in ipairs(targets) do
-      target.player.attributes[type] = target.player.attributes[type] - quantity
-      target.player.queue_popup({'popup', text = "-"..type, color = {1, 0, 0}})
-      if type == "health" then
-        target.billboard.flash({1, 0, 0})
-      end
+  local min = game.c.attr_ranges[type].min
+  for _, target in ipairs(targets) do
+    local value = target.player.attributes[type]
+
+    local text
+    if value > min then
+      target.player.attributes[type] = math.max(min, value + quantity)
+      text = '-' .. type
+    else
+      text = 'min ' .. type
+    end
+      target.player.queue_popup({'popup', text=text, color={1, 0, 0}})
+    if type == "health" then
+      target.billboard.flash({0, 1, 0})
     end
   end
+end
 
 function add_rule(qual1, type1, qual2, type2)
   local rule = {}
