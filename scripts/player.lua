@@ -25,6 +25,8 @@ for _, v in ipairs(game.c.consequence_types) do
   attributes[v] = 0
 end
 
+self.billboard.image = game.resources.player_sprites[number].stand
+
 function update()
   -- movement
   local direction =
