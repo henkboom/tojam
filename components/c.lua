@@ -34,11 +34,11 @@ keys = {
     action = string.byte('H')
   },
   {
-    down = string.byte('1'),
+    up = string.byte('1'),
 		action = string.byte('2')
   },
   {
-    down = string.byte('3'),
+    up = string.byte('3'),
 		action = string.byte('4')
   },
 }
