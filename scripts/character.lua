@@ -43,11 +43,16 @@ function jump()
     vertical_vel = 4
     jump_timer = 0
     game.resources.sfx["jump"]:play(1)
+    game.rules.register_event(self, "jump")
   end
 end
 
 function reset_jump()
   jump_timer = false
+end
+
+function can_jump()
+  return grounded
 end
 
 function hit_ground()

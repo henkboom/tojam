@@ -50,8 +50,9 @@ function update()
   end
 
   -- jumping
-  if game.controls.button_pressed(number, 'jump') then
+  if game.controls.button_pressed(number, 'jump') and self.character.can_jump() then
     self.character.jump()
+    attributes["jump"] = attributes["jump"] + 1
   elseif not game.controls.button_held(number, 'jump') then
     self.character.reset_jump()
   end
