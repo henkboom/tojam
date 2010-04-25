@@ -19,6 +19,10 @@ function update()
     return
   end
 
+  if target and target.dead then
+    target = nil
+  end
+
   if target and self.transform.pos ~= target.transform.pos then
 		-- after a certain time, stop following (if no attacks)
 		follow_cooldown = follow_cooldown - 1
