@@ -14,6 +14,12 @@ sprites = {
 	pickup = graphics.sprite_from_image('sprites/teacup.png', nil, 'center')
 }
 
+for _, s in ipairs{sprites.tojam, sprites.no_fun} do
+  s.tex:enable()
+	gl.glTexParameterf(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR)
+  s.tex:disable()
+end
+
 sfx = {
   damage = mixer.load_wav('audio/damage.wav'),
   miss = mixer.load_wav('audio/miss.wav'),
