@@ -46,6 +46,12 @@ function make()
       game.actors.new(game.blueprints.player,
         {'transform', pos=v2(200, 120)},
         {'player', number=2})
+      game.actors.new(game.blueprints.player,
+        {'transform', pos=v2(20, 120)},
+        {'player', number=3})
+			game.actors.new(game.blueprints.player,
+        {'transform', pos=v2(200, 20)},
+        {'player', number=4})
 				
 			game.actors.new(game.blueprints.spawner)
 
