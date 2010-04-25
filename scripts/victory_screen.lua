@@ -23,6 +23,7 @@ function update()
   if dead_countdown then
     dead_countdown = dead_countdown - 1
     if dead_countdown < 0 then
+      game.music.stop()
       kernel.switch_scene(the_game.make())
     end
   end

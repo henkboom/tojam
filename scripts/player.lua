@@ -27,6 +27,10 @@ end
 attributes["health"] = 100
 
 function update()
+  if attributes.point >= 100 and #popup_queue <= 1 then
+    queue_popup({'popup', text='VICTORY!', color={1, 1, 0}})
+  end
+  --attributes.point = attributes.point + 1
   -- movement
   local direction =
     game.camera.transform_direction_from_screen(
