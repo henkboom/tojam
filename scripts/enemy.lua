@@ -26,6 +26,8 @@ function update()
       self.character.attack()
       attack_cooldown = 40
     end
+  else
+    self.character.move(v2.zero, speed)
   end
 end
 

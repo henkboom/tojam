@@ -4,6 +4,9 @@ local v2 = require 'dokidoki.v2'
 
 assert(number, 'missing player argument')
 
+-- used for step tracking
+local last_pos = self.transform.pos
+
 local player_facing = v2(1, 0)
 -- distance travelled since last step
 local step_progress = 0
@@ -23,22 +26,22 @@ function update()
     game.camera.transform_direction_from_screen(
       game.controls.get_direction(number))
 
-  if direction ~= v2.zero then
-    local sign = attributes.speed >= 0 and 1 or -1
-    local speed_multiplier = 1 + sign * math.sqrt(sign * attributes.speed)
-                                 * game.c.player_speed_offset
-    local speed = math.max(game.c.player_min_speed,
-                           game.c.player_base_speed * speed_multiplier)
+  local sign = attributes.speed >= 0 and 1 or -1
+  local speed_multiplier = 1 + sign * math.sqrt(sign * attributes.speed)
+                           * game.c.player_speed_offset
+  local speed = math.max(game.c.player_min_speed,
+  game.c.player_base_speed * speed_multiplier)
 
-    self.character.move(direction, speed)
+  self.character.move(direction, speed)
 
-    -- step tracking
-    step_progress = step_progress + speed
-    while step_progress >= game.c.player_step_distance do
-      step_progress = step_progress - game.c.player_step_distance
-      attributes.step = attributes.step + 1
-      game.rules.register_event(self, 'step')
-    end
+  -- step tracking
+  local distance_travelled = v2.mag(self.transform.pos - last_pos)
+  last_pos = self.transform.pos
+  step_progress = step_progress + distance_travelled
+  while step_progress >= game.c.player_step_distance do
+    step_progress = step_progress - game.c.player_step_distance
+    attributes.step = attributes.step + 1
+    game.rules.register_event(self, 'step')
   end
 
   -- jumping
