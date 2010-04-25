@@ -42,6 +42,7 @@ function jump()
   if grounded then
     vertical_vel = 4
     jump_timer = 0
+    game.resources.sfx["jump"]:play(1)
   end
 end
 
