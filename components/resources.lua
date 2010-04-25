@@ -7,11 +7,15 @@ local mixer = require 'mixer'
 sprites = {
   tojam = graphics.sprite_from_image('sprites/TOJam.png', nil, 'center'),
   no_fun = graphics.sprite_from_image('sprites/no_fun.png', nil, 'center'),
+  instructions = graphics.sprite_from_image('sprites/instructions.png', nil, 'center'),
+  
   player = graphics.sprite_from_image('sprites/player.png', nil, 'center'),
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
   enemy_death = graphics.sprite_from_image('sprites/monster_death.png', nil, 'center'),
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
-	pickup = graphics.sprite_from_image('sprites/teacup.png', nil, 'center')
+	pickup = graphics.sprite_from_image('sprites/teacup.png', nil, 'center'),
+	heart = graphics.sprite_from_image('sprites/heart.png', nil, 'center'),
+	medal = graphics.sprite_from_image('sprites/medal.png', nil, 'center')
 }
 
 for _, s in ipairs{sprites.tojam, sprites.no_fun} do

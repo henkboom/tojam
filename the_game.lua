@@ -40,6 +40,7 @@ function make()
 
       local tojam_splash
       local no_fun_splash
+      local instructions_splash
       local start_game
       
       function tojam_splash()
@@ -54,7 +55,14 @@ function make()
           game.actors.new(game.blueprints.splash,
             {'transform', pos=v2(15, 15), height=85, scale_x = 0.3, scale_y = 0.3},
             {'billboard', image = game.resources.sprites.no_fun},
-            {'splash', timer = 120, when_dead = start_game})
+            {'splash', timer = 120, when_dead = instructions_splash})
+      end
+      
+      function instructions_splash()
+          game.actors.new(game.blueprints.splash,
+            {'transform', pos=v2(15, 15), height=85, scale_x = 0.3, scale_y = 0.3},
+            {'billboard', image = game.resources.sprites.instructions},
+            {'splash', timer = 1000, when_dead = start_game})
       end
 
       function start_game()
@@ -76,6 +84,7 @@ function make()
             {'player', number=4})
 			
       		game.actors.new(game.blueprints.spawner)
+					game.actors.new(game.blueprints.hud)
 
           game.action.resume()
       end

@@ -47,3 +47,6 @@ splash = game.make_blueprint('splash',
   {'transform'},
   {'billboard'},
   {'splash'})
+	
+hud = game.make_blueprint('hud',
+  {'hud'})
