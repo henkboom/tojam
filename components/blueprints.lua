@@ -6,6 +6,7 @@ local geom = require 'geom'
 player = game.make_blueprint('player',
   {'transform', height=0},
   {'billboard', image = game.resources.sprites.player},
+	{'drop_shadow'},
   {'tag', tags={'action'}},
   {'collider', poly=geom.make_octagon(8)},
   {'character'},
