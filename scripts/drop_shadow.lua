@@ -11,7 +11,9 @@ local function draw_for_tile(tile, fraction)
 	local height = game.level.get_height(tile.x+1, tile.y+1)
 	if height == nil then return end
 	
-	gl.glColor4d(0, 0, 0, 0.75)
+	local shadow_scale = math.min(math.max(0, (self.transform.height - height) / 64), 1) * 1 + 0.7
+	
+	gl.glColor4d(0, 0, 0, 0.7)
 
 	gl.glPushMatrix()
 	gl.glTranslated(tile.y * 16, height + 0.01, tile.x * 16)
@@ -19,8 +21,8 @@ local function draw_for_tile(tile, fraction)
 	
 	gl.glMatrixMode(gl.GL_TEXTURE)
 	gl.glPushMatrix()
-	gl.glTranslated(0.25, 0.25, 0)
-	gl.glScaled(0.75, 0.75, 1)
+	gl.glTranslated(-(shadow_scale - 1) / 2, -(shadow_scale - 1) / 2, 1)
+	gl.glScaled(shadow_scale, shadow_scale, 1)
 	gl.glTranslated(-fraction.y, -fraction.x, 0)
 	
 	gl.glBegin(gl.GL_QUADS)
@@ -34,6 +36,8 @@ local function draw_for_tile(tile, fraction)
 	
 	gl.glMatrixMode(gl.GL_MODELVIEW)
 	gl.glPopMatrix()
+	
+	gl.glColor3d(1, 1, 1)
 end
 
 function draw()
