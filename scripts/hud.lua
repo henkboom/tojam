@@ -9,9 +9,16 @@ local function draw_player_info(index, skip)
 	gl.glPushMatrix()
 		local text
 		if skip ~= true then
+			if index == 1 then gl.glColor3f(0.8, 0.8, 0.8)
+			elseif index == 2 then gl.glColor3f(0.25, 0.25, 1)
+			elseif index == 3 then gl.glColor3f(1, 0.25, 0.25)
+			elseif index == 4 then gl.glColor3f(0.25, 1, 0.25)
+			end
+			
 			text = 'player ' .. index .. ' :  '
 			graphics.draw_text(game.resources.font, text)	
 			gl.glTranslated(game.resources.font_string_width(text), 0, 0)
+			gl.glColor3f(1, 1, 1)
 		end
 		gl.glPushMatrix()
 			gl.glScaled(0.5, 0.5, 1)
