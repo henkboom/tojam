@@ -2,6 +2,7 @@ local gl = require 'gl'
 local mixer = require 'mixer'
 local stb_image = require 'stb_image'
 local graphics = require 'dokidoki.graphics'
+local mixer = require 'mixer'
 
 sprites = {
   tojam = graphics.sprite_from_image('sprites/TOJam.png', nil, 'center'),
@@ -45,3 +46,5 @@ function font_string_width(text)
 end
 
 level = stb_image.load('sprites/level.png', 1)
+
+music = mixer.load_ogg('music/god_save_the_queen.ogg')
