@@ -4,16 +4,14 @@
 action_duration = 60 * 20
 
 -- level settings
-
 level_size = 16
 level_tile_size = 16
 
 -- player settings
-
 player_base_speed = 2
 player_speed_offset = 0.2
 player_min_speed = 0.2
-player_step_distance = 32
+player_step_distance = 48
 
 -- controls for the four players
 keys = {
@@ -37,10 +35,10 @@ keys = {
 
 -- rule categories
 condition_qualifiers = {"each", "most", "least"}
-condition_types = {"step", "teacup", "damage", "point"}
+condition_types = {"step", "teacup", "health", "point"}
 consequence_qualifiers = {"adds", "removes"}
-consequence_types = {"teacup", "damage", "point", "speed"}
-types_plural = {step = "steps", teacup = "teacups", damage = "damage",
+consequence_types = {"teacup", "health", "point", "speed"}
+types_plural = {step = "steps", teacup = "teacups", health = "health",
                 point = "points", speed = "speed"}
 consequence_quantities = {most = 10, least = 10, each = 1}
 
