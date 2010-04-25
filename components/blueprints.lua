@@ -24,3 +24,7 @@ attack_hitbox = game.make_blueprint('attack_hitbox',
   {'tag', tags={'action'}},
   {'collider', poly=geom.make_octagon(16)},
   {'attack_hitbox'})
+
+popup = game.make_blueprint('popup',
+  {'transform'},
+  {'popup'})

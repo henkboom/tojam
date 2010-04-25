@@ -33,12 +33,18 @@ end
 qualifier_functions.adds = function(targets, type, quantity)
     for _, target in ipairs(targets) do
       target.player.attributes[type] = target.player.attributes[type] + quantity
+      game.actors.new(game.blueprints.popup,
+        {'transform', pos=target.transform.pos, height=target.transform.height},
+        {'popup', text = "+"..type, color = {0, 1, 0}})
     end
   end
   
 qualifier_functions.removes = function(targets, type, quantity)
     for _, target in ipairs(targets) do
       target.player.attributes[type] = target.player.attributes[type] - quantity
+      game.actors.new(game.blueprints.popup,
+        {'transform', pos=target.transform.pos, height=target.transform.height},
+        {'popup', text = "-"..type, color = {1, 0, 0}})
     end
   end
 

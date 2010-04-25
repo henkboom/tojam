@@ -21,7 +21,7 @@ function draw()
   game.camera.do_billboard_transform(
     self.transform.pos.y,
     self.transform.height,
-    self.transform.pos.x, 0)
+    self.transform.pos.x)
 
   -- slooooow and stupid rotation:
   local f = self.transform.facing
