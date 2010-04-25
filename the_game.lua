@@ -26,6 +26,7 @@ function make()
       -- general components
       game.init_component('collision')
       game.init_component('controls')
+      game.init_component('music')
 
       -- drawing components
       game.init_component('opengl')
@@ -42,6 +43,7 @@ function make()
       local start_game
       
       function tojam_splash()
+          game.music.play()
           game.actors.new(game.blueprints.splash,
             {'transform', pos=v2(15, 15), height=85, scale_x = 0.23, scale_y = 0.23},
             {'billboard', image = game.resources.sprites.tojam},
@@ -56,6 +58,7 @@ function make()
       end
 
       function start_game()
+          game.music.stop()
           game.init_component('level')
           game.level.load(game.resources.level)
 
