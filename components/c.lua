@@ -50,14 +50,7 @@ consequence_qualifiers = {"adds", "removes"}
 consequence_types = {"teacup", "health", "point", "speed"}
 types_plural = {step = "steps", teacup = "teacups", health = "health",
                 point = "points", speed = "speed", jump="jumps"}
-consequence_quantities = {most = 15, least = 15, each = 1}
+consequence_quantities = {most = 10, least = 10, each = 1}
 
 round_qualifiers = {most = true, least = true}
 event_qualifiers = {each = true}
-
-attr_ranges = {
-  teacup = {min=-math.huge, max=math.huge},
-  health = {min=-math.huge, max=math.huge},
-  point  = {min=-math.huge, max=math.huge},
-  speed  = {min=-30, max=30},
-}
