@@ -16,7 +16,7 @@ local function spawn()
 		order_index = 1
 	end
 	
-	local spawn_pos = v2(math.floor(math.random(1, 16)), math.floor(math.random(1, 16)))
+	local spawn_pos = v2(math.floor(math.random(1, 15)), math.floor(math.random(1, 15)))
 	
 	if #game.actors.get(entity_to_spawn) < 4 then
 		game.actors.new(game.blueprints[entity_to_spawn],
