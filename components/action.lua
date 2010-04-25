@@ -44,11 +44,13 @@ game.actors.new_generic('action_component', function ()
     end
   end
   function draw_gui()
-    gl.glPushMatrix()
-    gl.glTranslated(750, 40.0, 0)
-    gl.glScaled(5, 5, 0)
-    graphics.draw_text(game.resources.font,
-      tostring(math.ceil((game.c.action_duration - time) / 60)))
-    gl.glPopMatrix()
+    if not paused then
+      gl.glPushMatrix()
+      gl.glTranslated(750, 40.0, 0)
+      gl.glScaled(5, 5, 0)
+      graphics.draw_text(game.resources.font,
+        tostring(math.ceil((game.c.action_duration - time) / 60)))
+      gl.glPopMatrix()
+    end
   end
 end)

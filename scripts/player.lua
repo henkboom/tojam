@@ -13,6 +13,9 @@ local player_facing = v2(1, 0)
 -- distance travelled since last step
 local step_progress = 0
 
+local popup_timer = 0
+local popup_queue = {}
+
 -- initialize tracked attributes
 attributes = {}
 for _, v in ipairs(game.c.condition_types) do
@@ -57,6 +60,11 @@ function update()
   if game.controls.button_pressed(number, 'action') then
     self.character.attack()
   end
+  
+  popup_timer = math.max(popup_timer - 1, 0)
+  if popup_timer <= 0 and #popup_queue > 0 then
+    dequeue_popup()
+  end
 end
 
 function draw_debug()
@@ -73,6 +81,18 @@ function draw_debug()
   gl.glTranslated(10, 8, 0)
   graphics.draw_text(game.resources.font, table.concat(lines))
   gl.glPopMatrix()
+end
+
+function queue_popup(popup)
+  table.insert(popup_queue, popup)
+end
+
+function dequeue_popup()
+  game.actors.new(game.blueprints.popup,
+        {'transform', pos=self.transform.pos, height=self.transform.height},
+        popup_queue[1])
+  popup_timer = 20 / #popup_queue
+  table.remove(popup_queue, 1)
 end
 
 game.collision.add_collider(self, 'attack_hitbox', function (other, correction)
