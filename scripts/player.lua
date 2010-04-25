@@ -20,7 +20,8 @@ end
 function update()
   -- movement
   local direction =
-    game.camera.transform_controls(game.controls.get_direction(number))
+    game.camera.transform_direction_from_screen(
+      game.controls.get_direction(number))
 
   if direction ~= v2.zero then
     local sign = attributes.speed >= 0 and 1 or -1

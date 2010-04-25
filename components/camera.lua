@@ -9,8 +9,11 @@ function do_billboard_transform(x, y, z)
 end
 
 local control_x = v2.norm(v2(1, -1))
-function transform_controls(direction)
+function transform_direction_from_screen(direction)
   return v2.rotate_to(direction, control_x)
+end
+function transform_direction_to_screen(direction)
+  return v2.rotate_from(direction, control_x)
 end
 
 game.actors.new_generic('camera_component', function ()
