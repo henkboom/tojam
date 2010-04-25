@@ -47,9 +47,18 @@ game.actors.new_generic('action_component', function ()
     if not paused then
       gl.glPushMatrix()
       gl.glTranslated(750, 40.0, 0)
-      gl.glScaled(5, 5, 0)
-      graphics.draw_text(game.resources.font,
-        tostring(math.ceil((game.c.action_duration - time) / 60)))
+      local countdown = math.ceil((game.c.action_duration - time) / 60)
+      local scale = 5
+      if countdown <= 5 then
+        scale = scale + (6 - countdown) * 10
+        gl.glTranslated((6 - countdown) * -50, (6 - countdown) * 80, 0)
+      end
+      gl.glScaled(scale, scale, 0)
+      if countdown <= 10 then
+        gl.glColor4d(1, 1, 1, (game.c.action_duration - time) % 60 / 60)
+      end
+      graphics.draw_text(game.resources.font, tostring(countdown))
+      gl.glColor3d(1, 1, 1)
       gl.glPopMatrix()
     end
   end

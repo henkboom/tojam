@@ -29,7 +29,19 @@ function draw()
     self.transform.pos.x)
   gl.glTranslated(game.resources.font_string_width(text) / -2, 0, 0)
   gl.glColor4d(color[1], color[2], color[3], timer / MAX_TIMER)
+
   graphics.draw_text(game.resources.font, text)
+
+  gl.glColor4d(0, 0, 0, timer / MAX_TIMER)
+  gl.glTranslated(-0.5, -0.5, -0.05)
+  graphics.draw_text(game.resources.font, text)
+  gl.glTranslated(1, 0, 0)
+  graphics.draw_text(game.resources.font, text)
+  gl.glTranslated(0, 1, 0)
+  graphics.draw_text(game.resources.font, text)
+  gl.glTranslated(-1, 0, 0)
+  graphics.draw_text(game.resources.font, text)
+
   gl.glColor3d(1, 1, 1, 1)
   gl.glPopMatrix()
 end
