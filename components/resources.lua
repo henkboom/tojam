@@ -8,6 +8,8 @@ sprites = {
   tojam = graphics.sprite_from_image('sprites/TOJam.png', nil, 'center'),
   no_fun = graphics.sprite_from_image('sprites/no_fun.png', nil, 'center'),
   instructions = graphics.sprite_from_image('sprites/instructions.png', nil, 'center'),
+  title = graphics.sprite_from_image('sprites/title.png', nil, 'center'),
+  credits = graphics.sprite_from_image('sprites/credits.png', nil, 'center'),
   
   player = graphics.sprite_from_image('sprites/player.png', nil, 'center'),
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
