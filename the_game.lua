@@ -41,6 +41,7 @@ function make()
       local tojam_splash
       local no_fun_splash
       local instructions_splash
+      local title_screen
       local start_game
       
       function tojam_splash()
@@ -62,13 +63,24 @@ function make()
           game.actors.new(game.blueprints.splash,
             {'transform', pos=v2(15, 15), height=85, scale_x = 0.3, scale_y = 0.3},
             {'billboard', image = game.resources.sprites.instructions},
-            {'splash', timer = 1000, when_dead = start_game})
+            {'splash', timer = 800, when_dead = title_screen})
+      end
+
+      function title_screen()
+          game.init_component('level')
+          game.level.load(game.resources.level)
+          game.actors.new(game.blueprints.splash,
+            {'transform', pos=v2(15, 15), height=100, scale_x = 0.3, scale_y = 0.3},
+            {'billboard', image = game.resources.sprites.title},
+            {'splash', timer = math.huge, when_dead = start_game})
+          game.actors.new(game.blueprints.splash,
+            {'transform', pos=v2(15, 15), height=40, scale_x = 0.3, scale_y = 0.3},
+            {'billboard', image = game.resources.sprites.credits},
+            {'splash', timer = math.huge})
       end
 
       function start_game()
           game.music.stop()
-          game.init_component('level')
-          game.level.load(game.resources.level)
 
           game.actors.new(game.blueprints.player,
             {'transform', pos=v2(20, 20), height=10},

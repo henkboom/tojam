@@ -8,11 +8,11 @@ sprites = {
   tojam = graphics.sprite_from_image('sprites/TOJam.png', nil, 'center'),
   no_fun = graphics.sprite_from_image('sprites/no_fun.png', nil, 'center'),
   instructions = graphics.sprite_from_image('sprites/instructions.png', nil, 'center'),
+  title = graphics.sprite_from_image('sprites/title.png', nil, 'center'),
+  credits = graphics.sprite_from_image('sprites/credits.png', nil, 'center'),
   
-  player = graphics.sprite_from_image('sprites/player.png', nil, 'center'),
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
   enemy_death = graphics.sprite_from_image('sprites/monster_death.png', nil, 'center'),
-  enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
 	pickup = graphics.sprite_from_image('sprites/teacup.png', nil, 'center'),
 	heart = graphics.sprite_from_image('sprites/heart.png', nil, 'center'),
 	medal = graphics.sprite_from_image('sprites/medal.png', nil, 'center')
@@ -23,6 +23,21 @@ for _, s in ipairs{sprites.tojam, sprites.no_fun} do
 	gl.glTexParameterf(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR)
   s.tex:disable()
 end
+
+player_sprites = {
+	{ stand = graphics.sprite_from_image('sprites/player1_stand.png', nil, 'center'),
+		attack = graphics.sprite_from_image('sprites/player1_attack.png', nil, 'center'),
+		dead = graphics.sprite_from_image('sprites/player1_dead.png', nil, 'center') },
+	{ stand = graphics.sprite_from_image('sprites/player2_stand.png', nil, 'center'),
+		attack = graphics.sprite_from_image('sprites/player2_attack.png', nil, 'center'),
+		dead = graphics.sprite_from_image('sprites/player2_dead.png', nil, 'center') },
+	{ stand = graphics.sprite_from_image('sprites/player3_stand.png', nil, 'center'),
+		attack = graphics.sprite_from_image('sprites/player3_attack.png', nil, 'center'),
+		dead = graphics.sprite_from_image('sprites/player3_dead.png', nil, 'center') },		
+	{ stand = graphics.sprite_from_image('sprites/player4_stand.png', nil, 'center'),
+		attack = graphics.sprite_from_image('sprites/player4_attack.png', nil, 'center'),
+		dead = graphics.sprite_from_image('sprites/player4_dead.png', nil, 'center') },				
+}
 
 sfx = {
   damage = mixer.load_wav('audio/damage.wav'),
