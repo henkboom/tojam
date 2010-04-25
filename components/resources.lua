@@ -8,7 +8,7 @@ sprites = {
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
   enemy_death = graphics.sprite_from_image('sprites/monster_death.png', nil, 'center'),
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
-	pickup = graphics.sprite_from_image('sprites/teacup.png', nil, 'center'),
+	pickup = graphics.sprite_from_image('sprites/teacup.png', nil, 'center')
 }
 
 sfx = {
@@ -19,7 +19,8 @@ sfx = {
 
 textures = {
   grass = graphics.texture_from_image('sprites/grass.png'),
-  cliff = graphics.texture_from_image('sprites/cliff.png')
+  cliff = graphics.texture_from_image('sprites/cliff.png'),
+	drop_shadow = graphics.texture_from_image('sprites/drop_shadow.png')
 }
 
 for _, t in pairs(textures) do
