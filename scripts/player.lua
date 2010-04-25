@@ -75,7 +75,7 @@ end
 game.collision.add_collider(self, 'attack_hitbox', function (other, correction)
   if self ~= other.attack_hitbox.source then
     self.transform.pos = self.transform.pos + correction
-    attributes["damage"] = attributes["damage"] + 1
+    attributes["health"] = attributes["health"] - 1
     game.rules.register_event(self, "damage")
     other.attack_hitbox.hit = true
     game.resources.sfx["damage"]:play(1)
