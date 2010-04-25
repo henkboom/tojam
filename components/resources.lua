@@ -13,7 +13,8 @@ sprites = {
 
 sfx = {
   damage = mixer.load_wav('audio/damage.wav'),
-  miss = mixer.load_wav('audio/miss.wav')
+  miss = mixer.load_wav('audio/miss.wav'),
+  jump = mixer.load_wav('audio/jump.wav')
 }
 
 textures = {

@@ -19,6 +19,10 @@ function update()
     return
   end
 
+  if target and target.dead then
+    target = nil
+  end
+
   if target and self.transform.pos ~= target.transform.pos then
 		-- after a certain time, stop following (if no attacks)
 		follow_cooldown = follow_cooldown - 1
@@ -54,6 +58,7 @@ end
 game.collision.add_collider(self, 'attack_hitbox', function (other, correction)
   if self ~= other.attack_hitbox.source then
     self.transform.pos = self.transform.pos + correction
+    self.character.do_knockback(v2.norm(correction))
     other.attack_hitbox.hit = true
     game.resources.sfx["damage"]:play(1)
     target = other.attack_hitbox.source

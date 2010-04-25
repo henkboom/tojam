@@ -12,6 +12,8 @@ local grounded = false
 local last_pos = self.transform.pos
 local direction = v2.zero
 
+local knockback = v2(0, 0)
+
 function move(new_direction, speed)
   if grounded then
     direction = (new_direction + direction*2)/3
@@ -34,19 +36,30 @@ function attack()
   self.billboard.jerk()
   local offset = attack_direction * 8
   game.actors.new(game.blueprints.attack_hitbox,
-    {'transform', pos=self.transform.pos + offset},
+    {'transform', pos=self.transform.pos + offset,
+                  height=self.transform.height},
     {'attack_hitbox', source=self, offset=offset})
 end
 
 function jump()
   if grounded then
-    vertical_vel = 4
+    vertical_vel = 3.5
     jump_timer = 0
+    game.resources.sfx["jump"]:play(1)
+    game.rules.register_event(self, "jump")
   end
 end
 
 function reset_jump()
   jump_timer = false
+end
+
+function can_jump()
+  return grounded
+end
+
+function do_knockback(direction)
+  knockback = direction
 end
 
 function hit_ground()
@@ -59,7 +72,7 @@ function update()
     grounded = false
   end
 
-  if not jump_timer or jump_timer > 10 then
+  if not jump_timer or jump_timer > 7 then
     vertical_vel = vertical_vel - 0.3
   else
     vertical_vel = vertical_vel - 0.1
@@ -68,6 +81,12 @@ function update()
     jump_timer = jump_timer + 1
   end
   self.transform.height = self.transform.height + vertical_vel
+
+  print(knockback)
+  if v2.sqrmag(knockback) > 0.5*0.5 then
+    self.transform.pos = self.transform.pos + knockback * 5
+  end
+  knockback = knockback * 0.9
 
   -- cheap momentum, stops player from getting stuck on stuff :p
   self.transform.pos = self.transform.pos + (self.transform.pos - last_pos) * 0.2

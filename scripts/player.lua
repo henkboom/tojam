@@ -50,8 +50,9 @@ function update()
   end
 
   -- jumping
-  if game.controls.button_pressed(number, 'jump') then
+  if game.controls.button_pressed(number, 'jump') and self.character.can_jump() then
     self.character.jump()
+    attributes["jump"] = attributes["jump"] + 1
   elseif not game.controls.button_held(number, 'jump') then
     self.character.reset_jump()
   end
@@ -68,19 +69,21 @@ function update()
 end
 
 function draw_debug()
-  local lines = {}
-  for k,v in pairs(attributes) do
-    table.insert(lines, string.format("%s: %s\n", k, v))
-  end
+  if game.keyboard.key_held(string.byte('`')) then
+    local lines = {}
+    for k,v in pairs(attributes) do
+      table.insert(lines, string.format("%s: %s\n", k, v))
+    end
 
-  gl.glPushMatrix()
-  game.camera.do_billboard_transform(
-    self.transform.pos.y,
-    self.transform.height,
-    self.transform.pos.x, 0)
-  gl.glTranslated(10, 8, 0)
-  graphics.draw_text(game.resources.font, table.concat(lines))
-  gl.glPopMatrix()
+    gl.glPushMatrix()
+    game.camera.do_billboard_transform(
+      self.transform.pos.y,
+      self.transform.height,
+      self.transform.pos.x, 0)
+    gl.glTranslated(10, 8, 0)
+    graphics.draw_text(game.resources.font, table.concat(lines))
+    gl.glPopMatrix()
+  end
 end
 
 function queue_popup(popup)
@@ -97,7 +100,7 @@ end
 
 game.collision.add_collider(self, 'attack_hitbox', function (other, correction)
   if self ~= other.attack_hitbox.source then
-    self.transform.pos = self.transform.pos + correction
+    self.character.do_knockback(v2.norm(correction))
     attributes["health"] = attributes["health"] - 1
     game.rules.register_event(self, "damage")
     other.attack_hitbox.hit = true

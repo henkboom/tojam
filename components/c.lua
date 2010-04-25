@@ -45,11 +45,11 @@ keys = {
 
 -- rule categories
 condition_qualifiers = {"each", "most", "least"}
-condition_types = {"step", "teacup", "health", "point"}
+condition_types = {"step", "teacup", "health", "point", "jump"}
 consequence_qualifiers = {"adds", "removes"}
 consequence_types = {"teacup", "health", "point", "speed"}
 types_plural = {step = "steps", teacup = "teacups", health = "health",
-                point = "points", speed = "speed"}
+                point = "points", speed = "speed", jump="jumps"}
 consequence_quantities = {most = 10, least = 10, each = 1}
 
 round_qualifiers = {most = true, least = true}
