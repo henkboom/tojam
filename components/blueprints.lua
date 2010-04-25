@@ -15,7 +15,7 @@ player = game.make_blueprint('player',
 enemy = game.make_blueprint('enemy',
   {'transform', height=0},
   {'billboard', image = game.resources.sprites.enemy},
-  {'tag', tags={'action'}},
+  {'tag', tags={'action', 'enemy'}},
 	{'drop_shadow'},
   {'collider', poly=geom.make_octagon(8)},
   {'character'},
@@ -36,9 +36,14 @@ spawner = game.make_blueprint('spawner',
 	{'spawner'})
 
 pickup = game.make_blueprint('pickup', 
-	{'tag', tags={'action'}},
+	{'tag', tags={'action', 'pickup'}},
 	{'transform'},
 	{'drop_shadow'},
 	{'collider', poly=geom.make_octagon(8)},
   {'billboard', image = game.resources.sprites.pickup},
 	{'pickup'})	
+
+splash = game.make_blueprint('splash',
+  {'transform'},
+  {'billboard'},
+  {'splash'})

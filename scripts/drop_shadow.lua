@@ -11,7 +11,7 @@ local function draw_for_tile(tile, fraction)
 	local height = game.level.get_height(tile.x+1, tile.y+1)
 	if height == nil then return end
 	
-	local shadow_scale = math.min(math.max(0, (self.transform.height - height) / 64), 1) * 1 + 0.7
+	local shadow_scale = math.min(math.max(0, (self.transform.height - height) / 96), 1) * 1.5 + 0.65
 	
 	gl.glColor4d(0, 0, 0, 0.7)
   gl.glDepthMask(false)

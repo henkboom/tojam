@@ -82,7 +82,6 @@ function update()
   end
   self.transform.height = self.transform.height + vertical_vel
 
-  print(knockback)
   if v2.sqrmag(knockback) > 0.5*0.5 then
     self.transform.pos = self.transform.pos + knockback * 5
   end

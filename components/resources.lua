@@ -4,6 +4,8 @@ local stb_image = require 'stb_image'
 local graphics = require 'dokidoki.graphics'
 
 sprites = {
+  tojam = graphics.sprite_from_image('sprites/TOJam.png', nil, 'center'),
+  no_fun = graphics.sprite_from_image('sprites/no_fun.png', nil, 'center'),
   player = graphics.sprite_from_image('sprites/player.png', nil, 'center'),
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
   enemy_death = graphics.sprite_from_image('sprites/monster_death.png', nil, 'center'),
