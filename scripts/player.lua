@@ -41,6 +41,13 @@ function update()
     end
   end
 
+  -- jumping
+  if game.controls.button_pressed(number, 'jump') then
+    self.character.jump()
+  elseif not game.controls.button_held(number, 'jump') then
+    self.character.reset_jump()
+  end
+
   -- attack
   if game.controls.button_pressed(number, 'action') then
     self.character.attack()

@@ -30,7 +30,10 @@ game.actors.new_generic('level_component', function ()
         get_height(mini, maxj) or 0,
         get_height(maxi, maxj) or 0)
 
-      a.transform.height = math.max(a.transform.height, height + 8)
+      if a.transform.height < height + 8 then
+        a.transform.height = height + 8
+        a.character.hit_ground()
+      end
     end
   end
 

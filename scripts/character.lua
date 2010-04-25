@@ -5,6 +5,11 @@ self.tags.character = true
 local movement_direction = v2.zero
 local attack_direction = v2(1, 0)
 
+local vertical_vel = 0
+local jump_timer = false
+
+local grounded = false
+
 function move(direction, speed)
   local vel = direction * speed
   self.transform.pos = self.transform.pos + vel
@@ -26,8 +31,38 @@ function attack()
     {'attack_hitbox', source=self, offset=offset})
 end
 
+function jump()
+  if grounded then
+    vertical_vel = 4
+    jump_timer = 0
+  end
+end
+
+function reset_jump()
+  jump_timer = false
+end
+
+function hit_ground()
+  vertical_vel = math.max(0, vertical_vel)
+  grounded = "yes"
+end
+
 function update()
-  self.transform.height = self.transform.height - 1
+  if grounded == "maybe" then
+    grounded = false
+  end
+
+  if not jump_timer or jump_timer > 10 then
+    vertical_vel = vertical_vel - 0.3
+  else
+    vertical_vel = vertical_vel - 0.1
+  end
+  if jump_timer then
+    jump_timer = jump_timer + 1
+  end
+  self.transform.height = self.transform.height + vertical_vel
+
+  grounded = "maybe"
 end
 
 game.collision.add_collider(self, 'character', function (other, correction)

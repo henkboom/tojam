@@ -23,8 +23,8 @@ game.actors.new_generic('camera_component', function ()
     gl.glMatrixMode(gl.GL_PROJECTION)
     gl.glLoadIdentity()
     glu.gluPerspective(45, 4/3, 1, 1000)
-    glu.gluLookAt(-8*16, 16*16, -8*16,
-                  8*16, 0, 8*16,
+    glu.gluLookAt(-6*16, 12*16, -6*16,
+                  6*16, 0, 6*16,
                   0, 1, 0)
     gl.glMatrixMode(gl.GL_MODELVIEW)
     gl.glLoadIdentity()
