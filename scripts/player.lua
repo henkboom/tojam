@@ -4,6 +4,8 @@ local v2 = require 'dokidoki.v2'
 
 assert(number, 'missing player argument')
 
+self.tags.player = true
+
 local player_facing = v2(1, 0)
 -- distance travelled since last step
 local step_progress = 0
