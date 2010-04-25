@@ -8,6 +8,14 @@ local vel = 0.5
 
 function update()
   timer = timer - 1
+
+  if game.controls.button_pressed(1, 'action') or
+     game.controls.button_pressed(2, 'action') or
+     game.controls.button_pressed(3, 'action') or
+     game.controls.button_pressed(4, 'action') then
+    timer = 0
+  end
+
   self.billboard.color[4] = math.min(self.billboard.color[4] + 1/60, 1)
 
   self.transform.pos = self.transform.pos + v2(-vel, -vel)
