@@ -3,7 +3,7 @@ local glfw = require 'glfw'
 -- constants, accessed as game.c.___
 
 -- game flow
-action_duration = 60 * 20
+action_duration = 60 * 7
 
 -- level settings
 level_size = 16
