@@ -104,20 +104,20 @@ game.actors.new_generic('level_component', function ()
         gl.glColor3d(0.8, 0.8, 0.8)
         local left = get_height(i-1, j) or math.huge
         if left < height then
-          gl.glTexCoord2d(left/16,   1); gl.glVertex3d(x+16, left,   z)
-          gl.glTexCoord2d(height/16, 1); gl.glVertex3d(x,    left,   z)
-          gl.glTexCoord2d(height/16, 0); gl.glVertex3d(x,    height, z)
-          gl.glTexCoord2d(left/16,   0); gl.glVertex3d(x+16, height, z)
+          gl.glTexCoord2d(0, -left/16);   gl.glVertex3d(x+16, left,   z)
+          gl.glTexCoord2d(1, -left/16); gl.glVertex3d(x,    left,   z)
+          gl.glTexCoord2d(1, -height/16); gl.glVertex3d(x,    height, z)
+          gl.glTexCoord2d(0, -height/16);   gl.glVertex3d(x+16, height, z)
         end
         gl.glColor3d(1, 1, 1)
 
         -- right edge
         local right = get_height(i, j-1) or math.huge
         if right < height then
-          gl.glTexCoord2d(right/16,  1); gl.glVertex3d(x, right,  z)
-          gl.glTexCoord2d(height/16, 1); gl.glVertex3d(x, right,  z+16)
-          gl.glTexCoord2d(height/16, 0); gl.glVertex3d(x, height, z+16)
-          gl.glTexCoord2d(right/16,  0); gl.glVertex3d(x, height, z)
+          gl.glTexCoord2d(0, -right/16);  gl.glVertex3d(x, right,  z)
+          gl.glTexCoord2d(1, -right/16);  gl.glVertex3d(x, right,  z+16)
+          gl.glTexCoord2d(1, -height/16); gl.glVertex3d(x, height, z+16)
+          gl.glTexCoord2d(0, -height/16); gl.glVertex3d(x, height, z)
         end
       end
     end
