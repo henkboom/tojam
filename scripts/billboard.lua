@@ -21,7 +21,7 @@ function draw()
   game.camera.do_billboard_transform(
     self.transform.pos.y,
     self.transform.height,
-    self.transform.pos.x, 0)
+    self.transform.pos.x)
 
   -- slooooow and stupid rotation:
   local f = self.transform.facing
@@ -31,9 +31,10 @@ function draw()
               self.transform.scale_y, 0)
 
   if jerk_timer > 0 then
-    gl.glTranslated(4, 0, 0)
-    gl.glRotated(-60, 0, 0, 1)
-    gl.glTranslated(-2, 0, 0)
+		local factor = jerk_timer / 5
+    gl.glTranslated(4 * factor, 0, 0)
+    gl.glRotated(-60 * factor, 0, 0, 1)
+    gl.glTranslated(-2 * factor, 0, 0)
   end
 
   if flash_timer > 0 then

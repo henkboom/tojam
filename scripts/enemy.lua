@@ -9,6 +9,8 @@ local attack_cooldown = 0
 local death_duration = 30
 local death_timer = death_duration
 
+local follow_cooldown = 3 * 60
+
 function update()
   attack_cooldown = math.max(0, attack_cooldown - 1)
 
@@ -18,6 +20,13 @@ function update()
   end
 
   if target and self.transform.pos ~= target.transform.pos then
+		-- after a certain time, stop following (if no attacks)
+		follow_cooldown = follow_cooldown - 1
+		if follow_cooldown == 0 then
+			target = nil
+			return
+		end
+	
     local direction = v2.norm(target.transform.pos - self.transform.pos)
     self.character.move(direction, speed)
 
@@ -25,6 +34,7 @@ function update()
     if v2.mag(self.transform.pos - target.transform.pos) < 20 and attack_cooldown == 0 then
       self.character.attack()
       attack_cooldown = 40
+			follow_cooldown = 3 * 60
     end
   else
     self.character.move(v2.zero, speed)

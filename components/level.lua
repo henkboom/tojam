@@ -13,7 +13,7 @@ function load(level_data)
   end
 end
 
-local function get_height(i, j)
+function get_height(i, j)
   return level[i] and level[i][j]
 end
 
@@ -81,7 +81,7 @@ game.actors.new_generic('level_component', function ()
         local z = (i-1)*16
         local x = (j-1)*16
         gl.glTexCoord2d(0, 1); gl.glVertex3d(x,    height, z)
-        if shadow then gl.glColor3d(0.8, 0.8, 0.8) end
+        if shadow then gl.glColor3d(0.6, 0.6, 0.6) end
         gl.glTexCoord2d(1, 1); gl.glVertex3d(x,    height, z+16)
         gl.glTexCoord2d(1, 0); gl.glVertex3d(x+16, height, z+16)
         if shadow then gl.glColor3d(1, 1, 1) end

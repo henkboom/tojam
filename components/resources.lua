@@ -7,7 +7,8 @@ sprites = {
   player = graphics.sprite_from_image('sprites/player.png', nil, 'center'),
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
   enemy_death = graphics.sprite_from_image('sprites/monster_death.png', nil, 'center'),
-  enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center')
+  enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
+	pickup = graphics.sprite_from_image('sprites/teacup.png', nil, 'center'),
 }
 
 sfx = {
