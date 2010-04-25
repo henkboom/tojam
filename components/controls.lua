@@ -56,7 +56,7 @@ game.actors.new_generic('controls', function ()
 			old_joystick_states[player][i] = s
 		end
 	
-		local buttons = glfw.GetJoystickButtons(connected[controller], 2)
+		local buttons = glfw.GetJoystickButtons(connected[controller], 3)
 		local axis = glfw.GetJoystickPos(connected[controller], 2)
 		
 		joystick_states[player].left = axis[1] < -0.5
@@ -64,7 +64,7 @@ game.actors.new_generic('controls', function ()
 		joystick_states[player].up = axis[2] > 0.5
 		joystick_states[player].down = axis[2] < -0.5
 		joystick_states[player].jump = buttons[1] == glfw.PRESS
-		joystick_states[player].action = buttons[2] == glfw.PRESS
+		joystick_states[player].action = (buttons[2] == glfw.PRESS) or (buttons[3] == glfw.PRESS)
 	end
 
   function update_setup()	

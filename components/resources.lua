@@ -12,6 +12,7 @@ sprites = {
   credits = graphics.sprite_from_image('sprites/credits.png', nil, 'center'),
   
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
+  enemy_angry = graphics.sprite_from_image('sprites/monster_angry.png', nil, 'center'),
   enemy_death = graphics.sprite_from_image('sprites/monster_death.png', nil, 'center'),
 	pickup = graphics.sprite_from_image('sprites/teacup.png', nil, 'center'),
 	heart = graphics.sprite_from_image('sprites/heart.png', nil, 'center'),

@@ -21,6 +21,7 @@ function update()
 
   if target and target.dead then
     target = nil
+    self.billboard.image = game.resources.sprites.enemy
   end
 
   if target and self.transform.pos ~= target.transform.pos then
@@ -28,9 +29,11 @@ function update()
 		follow_cooldown = follow_cooldown - 1
 		if follow_cooldown == 0 then
 			target = nil
+			self.billboard.image = game.resources.sprites.enemy
 			return
 		end
 	
+	  self.billboard.image = game.resources.sprites.enemy_angry
     local direction = v2.norm(target.transform.pos - self.transform.pos)
     self.character.move(direction, speed)
 
