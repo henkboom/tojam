@@ -6,11 +6,14 @@ local target = nil
 local speed = 1
 local attack_cooldown = 0
 
+local death_duration = 30
+local death_timer = death_duration
+
 function update()
   attack_cooldown = math.max(0, attack_cooldown - 1)
 
   if health < 1 then
-    self.dead = true
+    die()
     return
   end
 
@@ -23,6 +26,16 @@ function update()
       self.character.attack()
       attack_cooldown = 40
     end
+  end
+end
+
+function die()
+  death_timer = death_timer - 1
+  if death_timer < 0 then
+    self.dead = true
+  else
+    self.billboard.image = game.resources.sprites.enemy_death
+    self.billboard.color[4] = death_timer/death_duration
   end
 end
 
