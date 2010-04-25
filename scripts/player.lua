@@ -69,19 +69,21 @@ function update()
 end
 
 function draw_debug()
-  local lines = {}
-  for k,v in pairs(attributes) do
-    table.insert(lines, string.format("%s: %s\n", k, v))
-  end
+  if game.keyboard.key_held(string.byte('`')) then
+    local lines = {}
+    for k,v in pairs(attributes) do
+      table.insert(lines, string.format("%s: %s\n", k, v))
+    end
 
-  gl.glPushMatrix()
-  game.camera.do_billboard_transform(
-    self.transform.pos.y,
-    self.transform.height,
-    self.transform.pos.x, 0)
-  gl.glTranslated(10, 8, 0)
-  graphics.draw_text(game.resources.font, table.concat(lines))
-  gl.glPopMatrix()
+    gl.glPushMatrix()
+    game.camera.do_billboard_transform(
+      self.transform.pos.y,
+      self.transform.height,
+      self.transform.pos.x, 0)
+    gl.glTranslated(10, 8, 0)
+    graphics.draw_text(game.resources.font, table.concat(lines))
+    gl.glPopMatrix()
+  end
 end
 
 function queue_popup(popup)
