@@ -12,6 +12,8 @@ local grounded = false
 local last_pos = self.transform.pos
 local direction = v2.zero
 
+local knockback = v2(0, 0)
+
 function move(new_direction, speed)
   if grounded then
     direction = (new_direction + direction*2)/3
@@ -56,6 +58,10 @@ function can_jump()
   return grounded
 end
 
+function do_knockback(direction)
+  knockback = direction
+end
+
 function hit_ground()
   vertical_vel = math.max(0, vertical_vel)
   grounded = "yes"
@@ -75,6 +81,12 @@ function update()
     jump_timer = jump_timer + 1
   end
   self.transform.height = self.transform.height + vertical_vel
+
+  print(knockback)
+  if v2.sqrmag(knockback) > 0.5*0.5 then
+    self.transform.pos = self.transform.pos + knockback * 5
+  end
+  knockback = knockback * 0.9
 
   -- cheap momentum, stops player from getting stuck on stuff :p
   self.transform.pos = self.transform.pos + (self.transform.pos - last_pos) * 0.2
