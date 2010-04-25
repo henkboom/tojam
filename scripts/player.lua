@@ -24,6 +24,7 @@ end
 for _, v in ipairs(game.c.consequence_types) do
   attributes[v] = 0
 end
+attributes["health"] = 100
 
 function update()
   -- movement
