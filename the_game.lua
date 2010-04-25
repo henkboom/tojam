@@ -37,20 +37,45 @@ function make()
       game.init_component('action')
       game.init_component('voting')
 
-      game.init_component('level')
-      game.level.load(game.resources.level)
+      local tojam_splash
+      local no_fun_splash
+      local start_game
+      
+      function tojam_splash()
+          game.actors.new(game.blueprints.splash,
+            {'transform', pos=v2(0, 0), height=100, scale_x = 0.23, scale_y = 0.23},
+            {'billboard', image = game.resources.sprites.tojam},
+            {'splash', timer = 100, when_dead = no_fun_splash})
+      end
 
-      game.actors.new(game.blueprints.player,
-        {'transform', pos=v2(20, 20), height=10},
-        {'player', number=1})
-      game.actors.new(game.blueprints.player,
-        {'transform', pos=v2(200, 120)},
-        {'player', number=2})
-				
-			game.actors.new(game.blueprints.spawner)
+      function no_fun_splash()
+          game.actors.new(game.blueprints.splash,
+            {'transform', pos=v2(0, 0), height=100, scale_x = 0.3, scale_y = 0.3},
+            {'billboard', image = game.resources.sprites.no_fun},
+            {'splash', timer = 100, when_dead = start_game})
+      end
 
-      game.action.resume()
+      function start_game()
+          game.init_component('level')
+          game.level.load(game.resources.level)
+
+          game.actors.new(game.blueprints.player,
+            {'transform', pos=v2(20, 20), height=10},
+            {'player', number=1})
+          game.actors.new(game.blueprints.player,
+            {'transform', pos=v2(200, 120)},
+            {'player', number=2})
+			
+      		game.actors.new(game.blueprints.spawner)
+
+          game.action.resume()
+      end
+      
+      --display splash screens in order
+      tojam_splash()
     end)
 end
+
+
 
 return get_module_exports()

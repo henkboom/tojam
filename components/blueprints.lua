@@ -42,3 +42,8 @@ pickup = game.make_blueprint('pickup',
 	{'collider', poly=geom.make_octagon(8)},
   {'billboard', image = game.resources.sprites.pickup},
 	{'pickup'})	
+
+splash = game.make_blueprint('splash',
+  {'transform'},
+  {'billboard'},
+  {'splash'})
