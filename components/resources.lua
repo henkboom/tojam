@@ -10,6 +10,7 @@ sprites = {
   instructions = graphics.sprite_from_image('sprites/instructions.png', nil, 'center'),
   title = graphics.sprite_from_image('sprites/title.png', nil, 'center'),
   credits = graphics.sprite_from_image('sprites/credits.png', nil, 'center'),
+  victory = graphics.sprite_from_image('sprites/victory.png', nil, 'center'),
   
   enemy = graphics.sprite_from_image('sprites/monster.png', nil, 'center'),
   enemy_angry = graphics.sprite_from_image('sprites/monster_angry.png', nil, 'center'),
@@ -71,4 +72,9 @@ end
 
 level = stb_image.load('sprites/level.png', 1)
 
-music = mixer.load_ogg('music/god_save_the_queen.ogg')
+music = rawget(_G, '_resources_music')
+if not music then
+  music = mixer.load_ogg('music/god_save_the_queen.ogg')
+  rawset(_G, '_resources_music', music)
+end
+

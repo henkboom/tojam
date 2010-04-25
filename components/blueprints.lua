@@ -50,3 +50,6 @@ splash = game.make_blueprint('splash',
 	
 hud = game.make_blueprint('hud',
   {'hud'})
+
+victory_screen = game.make_blueprint('victory_screen',
+  {'victory_screen'})

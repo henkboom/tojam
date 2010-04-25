@@ -107,8 +107,8 @@ function check_victory()
   local players = game.actors.get("player")
   for _, player in ipairs(players) do
     if player.player.attributes["point"] >= 100 then
-      print("VICTORY!")
-      os.exit()
+      game.actors.new(game.blueprints.victory_screen,
+        {'victory_screen', player=player.player.number})
     end
   end
 end
