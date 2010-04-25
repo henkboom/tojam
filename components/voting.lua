@@ -35,6 +35,7 @@ local current_votes = {}
 local feedback_timer = 2
 local seconds_to_vote = 0
 local rule_passed = false
+local ui_alpha = 0
 
 function start()
   print('started choosing a new rule')
@@ -58,7 +59,14 @@ game.actors.new_generic('voting_component', function ()
 	end
 
   function update()			
-		if current_phase == PHASES.none then return end
+		if current_phase == PHASES.none and ui_alpha == 0 then return end
+		
+		if current_phase == PHASES.election_start then
+			ui_alpha = math.min(math.max(ui_alpha + 3 / 60, 0), 1)
+		end
+		if current_phase == PHASES.none then
+			ui_alpha = math.max(ui_alpha - 3 / 60, 0)
+		end
 		
 		if current_phase == PHASES.choosing_rule then
 			if game.controls.button_pressed(proposing_player, 'action') then
@@ -168,7 +176,7 @@ game.actors.new_generic('voting_component', function ()
 		local total_height = table.getn(choices) * (8 + LINE_SPACING) -- where 10 is graphics.font_map_line_height(game.resources.font)
 		
 		-- highlight the back for selected category
-		gl.glColor4d(0, 0, 0, 0.5)
+		gl.glColor4d(0, 0, 0, 0.5 * ui_alpha)
 		if category == current_category then
 			gl.glBegin(gl.GL_QUADS)
 				gl.glVertex2d(-1, 0)  
@@ -177,7 +185,7 @@ game.actors.new_generic('voting_component', function ()
 				gl.glVertex2d(max_width+1, 0) 
 			gl.glEnd()
 		end
-		gl.glColor3d(1, 1, 1)
+		gl.glColor4d(1, 1, 1, ui_alpha)
 		
 		if category == current_category then
 			local choice_count = table.getn(choices)
@@ -200,11 +208,11 @@ game.actors.new_generic('voting_component', function ()
 						gl.glVertex2d(max_width+1, -LINE_HEIGHT-1) 
 						gl.glVertex2d(max_width+1, 1) 
 					gl.glEnd()
-					gl.glColor3d(0, 0, 0)
+					gl.glColor4d(0, 0, 0, ui_alpha)
 				end
 				graphics.draw_text(game.resources.font, choice)
 				gl.glTranslated(0, -LINE_HEIGHT - LINE_SPACING / 2, 0)
-				gl.glColor3d(1, 1, 1)
+				gl.glColor4d(1, 1, 1, ui_alpha)
 			end
 		else
 			gl.glTranslated(0, -LINE_SPACING / 2, 0)
@@ -226,12 +234,12 @@ game.actors.new_generic('voting_component', function ()
 		gl.glScaled(2, 2, 2)
 		draw_line('existing rules :')
 		draw_line('----------------')
-		gl.glColor3d(0.85, 0.85, 0.85)
+		gl.glColor4d(0.85, 0.85, 0.85, ui_alpha)
 		for _, rule in ipairs(game.rules.rules) do
 			draw_rule(rule)
 		end
 		if table.getn(game.rules.rules) == 0 then draw_line('(none)') end
-		gl.glColor3d(1, 1, 1)
+		gl.glColor4d(1, 1, 1, ui_alpha)
 		gl.glPopMatrix()
 	end
 	
@@ -250,20 +258,20 @@ game.actors.new_generic('voting_component', function ()
 				gl.glScaled(game.resources.font_string_width('no'), 10, 1)
 				draw_quad()
 			gl.glPopMatrix()
-			gl.glColor3d(0, 0, 0)
+			gl.glColor4d(0, 0, 0, ui_alpha)
 		end
 		draw_line('no')
-		gl.glColor3d(1, 1, 1)
+		gl.glColor4d(1, 1, 1, ui_alpha)
 		
 		if current_votes[player] == true then
 			gl.glPushMatrix()
 				gl.glScaled(game.resources.font_string_width('yes'), 10, 1)
 				draw_quad()
 			gl.glPopMatrix()
-			gl.glColor3d(0, 0, 0)
+			gl.glColor4d(0, 0, 0, ui_alpha)
 		end			
 		draw_line('yes')
-		gl.glColor3d(1, 1, 1)
+		gl.glColor4d(1, 1, 1, ui_alpha)
 	end
 	
 	local function draw_voting_player(player)
@@ -310,7 +318,7 @@ game.actors.new_generic('voting_component', function ()
 	end
   
   function draw_gui()
-		if current_phase == PHASES.none then return end
+		if current_phase == PHASES.none and ui_alpha == 0 then return end
 		
 		local width = game.gui.width
 		local height = game.gui.height
@@ -318,7 +326,7 @@ game.actors.new_generic('voting_component', function ()
 		-- split screen SIX ways!
 		local safe_width = width - BOX_MARGIN * 4 - EXISTING_RULES_WIDTH
 		local safe_height = height - BOX_MARGIN * 4 - INFO_BAR_HEIGHT
-		gl.glColor4d(0.5, 0.5, 0.5, 0.5)
+		gl.glColor4d(0.5, 0.5, 0.5, 0.5 * ui_alpha)
 		-- existing rules
 		gl.glPushMatrix()
 			gl.glTranslated(BOX_MARGIN, height - BOX_MARGIN, 0)
@@ -332,31 +340,31 @@ game.actors.new_generic('voting_component', function ()
 			draw_quad()		
 		gl.glPopMatrix()
 		-- four compartments
-		gl.glColor4d(0.5, 0.5, 0.5, proposing_player == 1 and 0.75 or 0.5)
+		gl.glColor4d(0.5, 0.5, 0.5, (proposing_player == 1 and 0.75 or 0.5) * ui_alpha)
 		gl.glPushMatrix()
 			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN, height - BOX_MARGIN, 0)
 			gl.glScaled(safe_width / 2, safe_height / 2, 1)
 			draw_quad()
 		gl.glPopMatrix()
-		gl.glColor4d(0.5, 0.5, 0.5, proposing_player == 2 and 0.75 or 0.5)
+		gl.glColor4d(0.5, 0.5, 0.5, (proposing_player == 1 and 0.75 or 0.5) * ui_alpha)
 		gl.glPushMatrix()
 			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN + safe_width / 2 + BOX_MARGIN, height - BOX_MARGIN, 0)
 			gl.glScaled(safe_width / 2, safe_height / 2, 1)
 			draw_quad()
 		gl.glPopMatrix()
-		gl.glColor4d(0.5, 0.5, 0.5, proposing_player == 3 and 0.75 or 0.5)
+		gl.glColor4d(0.5, 0.5, 0.5, (proposing_player == 1 and 0.75 or 0.5) * ui_alpha)
 		gl.glPushMatrix()
 			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN - INFO_BAR_HEIGHT - BOX_MARGIN, 0)
 			gl.glScaled(safe_width / 2, safe_height / 2, 1)
 			draw_quad()
 		gl.glPopMatrix()
-		gl.glColor4d(0.5, 0.5, 0.5, proposing_player == 4 and 0.75 or 0.5)
+		gl.glColor4d(0.5, 0.5, 0.5, (proposing_player == 1 and 0.75 or 0.5) * ui_alpha)
 		gl.glPushMatrix()
 			gl.glTranslated(BOX_MARGIN + EXISTING_RULES_WIDTH + BOX_MARGIN + safe_width / 2 + BOX_MARGIN, height - BOX_MARGIN - safe_height / 2 - BOX_MARGIN - INFO_BAR_HEIGHT - BOX_MARGIN, 0)
 			gl.glScaled(safe_width / 2, safe_height / 2, 1)
 			draw_quad()
 		gl.glPopMatrix()
-		gl.glColor3d(1, 1, 1)
+		gl.glColor4d(1, 1, 1, ui_alpha)
 		
 		-- draw the rule selection for the choosing player
 		gl.glPushMatrix()
@@ -398,6 +406,8 @@ game.actors.new_generic('voting_component', function ()
 			gl.glTranslated(BOX_MARGIN * 2, game.gui.height - BOX_MARGIN * 2, 0)
 			draw_existing_rules()
 		gl.glPopMatrix()
+		
+		gl.glColor3d(1, 1, 1)
   end
 
 end)
