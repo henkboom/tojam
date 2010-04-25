@@ -56,7 +56,7 @@ qualifier_functions.removes = function(targets, type, quantity)
 
     local text
     if value > min then
-      target.player.attributes[type] = math.max(min, value + quantity)
+      target.player.attributes[type] = math.max(min, value - quantity)
       text = '-' .. type
     else
       text = 'min ' .. type
