@@ -41,7 +41,7 @@ function make()
       game.level.load(game.resources.level)
 
       game.actors.new(game.blueprints.player,
-        {'transform', pos=v2(0, 0)},
+        {'transform', pos=v2(20, 20), height=10},
         {'player', number=1})
       game.actors.new(game.blueprints.player,
         {'transform', pos=v2(200, 120)},

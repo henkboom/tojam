@@ -36,6 +36,8 @@ function update()
       attack_cooldown = 40
 			follow_cooldown = 3 * 60
     end
+  else
+    self.character.move(v2.zero, speed)
   end
 end
 

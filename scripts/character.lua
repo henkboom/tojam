@@ -2,7 +2,6 @@ local v2 = require 'dokidoki.v2'
 
 self.tags.character = true
 
-local movement_direction = v2.zero
 local attack_direction = v2(1, 0)
 
 local vertical_vel = 0
@@ -10,10 +9,18 @@ local jump_timer = false
 
 local grounded = false
 
-function move(direction, speed)
+local last_pos = self.transform.pos
+local direction = v2.zero
+
+function move(new_direction, speed)
+  if grounded then
+    direction = (new_direction + direction*2)/3
+  else
+    direction = (new_direction + direction*9)/10
+  end
   local vel = direction * speed
   self.transform.pos = self.transform.pos + vel
-  if direction ~= v2.zero then
+  if new_direction ~= v2.zero then
     attack_direction = direction
   end
 
@@ -62,7 +69,11 @@ function update()
   end
   self.transform.height = self.transform.height + vertical_vel
 
-  grounded = "maybe"
+  -- cheap momentum, stops player from getting stuck on stuff :p
+  self.transform.pos = self.transform.pos + (self.transform.pos - last_pos) * 0.2
+  last_pos = self.transform.pos
+
+  if grounded then grounded = "maybe" end
 end
 
 game.collision.add_collider(self, 'character', function (other, correction)
