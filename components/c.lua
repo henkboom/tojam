@@ -13,7 +13,7 @@ level_tile_size = 16
 player_base_speed = 1
 player_speed_offset = 0.2
 player_min_speed = 0.2
-player_step_distance = 48
+player_mile_distance = 150
 
 -- controls for the four players
 keys = {
@@ -45,10 +45,10 @@ keys = {
 
 -- rule categories
 condition_qualifiers = {"each", "most", "least"}
-condition_types = {"step", "teacup", "health", "point", "jump"}
+condition_types = {"mile", "teacup", "health", "point", "jump"}
 consequence_qualifiers = {"adds", "removes"}
 consequence_types = {"teacup", "health", "point", "speed"}
-types_plural = {step = "steps", teacup = "teacups", health = "health",
+types_plural = {mile = "miles", teacup = "teacups", health = "health",
                 point = "points", speed = "speed", jump="jumps"}
 consequence_quantities = {most = 10, least = 10, each = 1}
 

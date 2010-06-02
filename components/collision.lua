@@ -13,6 +13,7 @@ function add_collider(actor, tag, callback)
 end
 
 game.actors.new_generic('collision', function ()
+  self.tags.action = true
   function collision_check()
     -- utility function for using the collision functions
     local function set_body(body, actor)
