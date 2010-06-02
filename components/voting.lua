@@ -36,6 +36,7 @@ local feedback_timer = 2
 local seconds_to_vote = 0
 local rule_passed = false
 local ui_alpha = 0
+local impossible = false
 
 function start()
   game.music.play()
@@ -70,7 +71,7 @@ game.actors.new_generic('voting_component', function ()
 		end
 		
 		if current_phase == PHASES.choosing_rule then
-			if game.controls.button_pressed(proposing_player, 'action') then
+			if impossible == false and game.controls.button_pressed(proposing_player, 'action') then
 				current_phase = PHASES.voting
 				current_votes[proposing_player] = false
 				return
@@ -328,9 +329,20 @@ game.actors.new_generic('voting_component', function ()
 		end
 		
 		if current_phase == PHASES.choosing_rule then
+			gl.glPushMatrix()
 			for i = 1,4 do
 				draw_choice(i)
 			end			
+			gl.glPopMatrix()
+			
+			if game.c.condition_qualifiers[current_choices[1]] == "each" and game.c.each_impossible[game.c.condition_types[current_choices[2]]] then
+				impossible = true
+				gl.glTranslated(65, -85, 0)
+				draw_line("sir, this rule is impossible!", true)
+			else
+				impossible = false
+			end
+			
 		elseif (current_phase == PHASES.voting) or (current_phase == PHASES.election_results) then
 			-- fake rule so I can print it... ^_^
 			local rule = {}
