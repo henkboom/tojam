@@ -11,10 +11,11 @@ local dead_countdown
 
 function update()
   time = time + 1
-  if game.controls.button_pressed(1, 'action') or
-     game.controls.button_pressed(2, 'action') or
-     game.controls.button_pressed(3, 'action') or
-     game.controls.button_pressed(4, 'action') then
+  if time > 180 and
+     (game.controls.button_pressed(1, 'action') or
+      game.controls.button_pressed(2, 'action') or
+      game.controls.button_pressed(3, 'action') or
+      game.controls.button_pressed(4, 'action')) then
      if not dead_countdown then
        dead_countdown = 60
      end
